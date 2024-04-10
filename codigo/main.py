@@ -149,15 +149,26 @@ class Pelicula:
                 return self.film_name > other.estreno
         else:
             return self.director_name > other.director_name
-    
+        
+class NumberNotInMenu(Exception):
+    pass
 
        
-
-
 lista_peliculas = lop.LinkedOrderedPositionalList()
 
 with open(archivo, 'r') as contenido:
         info_procesos = contenido.read()
+
+while True:
+    try:
+        quehacer = int(input('Que quieres ver:\n1)Lista de peliculas ordenadas\n2)Lista de películas ordenadas sin duplicados\n3)Ver algunos listados tabulados\n4)Mostrar métricas\n'))
+        if (quehacer<1 or quehacer>4):
+            raise NumberNotInMenu
+        break
+    except ValueError:
+        print('\nDebes introducir un número\n')
+    except NumberNotInMenu:
+        print('\nDebe de ser un número del 1 al 4\n')
 
 for line in info_procesos.split('\n'):   
 
@@ -167,8 +178,15 @@ for line in info_procesos.split('\n'):
         director_name, film_name, estreno, puntuation = datos_pelicula 
 
         pelicula = Pelicula(director_name, film_name, estreno, puntuation)
-        #print(pelicula)
+        
         lista_peliculas.add(pelicula)
 
-for i in lista_peliculas:
-    print(i)
+if quehacer == 1:
+    for pelicula in lista_peliculas:
+        print(pelicula)
+elif quehacer == 2:
+    
+elif quehacer == 3:
+
+else:
+
