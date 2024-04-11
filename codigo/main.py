@@ -2,10 +2,10 @@
 #David Fernandez Reimundez; david.fernandez.reimundez@udc.es
 
 #Importamos la libreris sys, y los archivos para implementar el TAD Lista Posicional Ordenada
-import sys
+import sys, time
 import array_ordered_positional_list as aop
 import linked_ordered_positional_list as lop
-import time
+import pandas as pd
 
 
 #archivo = sys.argv[1]
@@ -150,6 +150,7 @@ class Pelicula:
 
     #Mayor
     def __gt__(self, other):
+    
         if self.director_name == other.director_name:
 
             if self.estreno == other.estreno:
@@ -161,6 +162,11 @@ class Pelicula:
         else:
             return self.director_name > other.director_name
         
+
+    def data_values(self):
+        lista = [self.film_name, self.director_name, self.estreno, self.puntuation]
+        return lista
+    
 class NumberNotInMenu(Exception):
     pass
 
@@ -171,6 +177,10 @@ lista_peliculas_copy = lop.LinkedOrderedPositionalList()    #Es lo mismo pero se
 
 with open(archivo, 'r') as contenido:
         info_procesos = contenido.read()
+
+
+
+
 
 while True:
     try:
@@ -183,6 +193,9 @@ while True:
     except NumberNotInMenu:
         print('\nDebe de ser un número del 1 al 4\n')
 
+
+
+
 for line in info_procesos.split('\n'):   
 
     if len(line) != 0 and len(line.split(';')) == 4:
@@ -194,6 +207,11 @@ for line in info_procesos.split('\n'):
         
         lista_peliculas.add(pelicula)
         lista_peliculas_copy.add(pelicula)
+
+
+
+
+
 
 #Mostrar peliculas ordenadas
 if quehacer == 1:
@@ -228,6 +246,49 @@ elif quehacer == 2:
         print(i)
 
 
+elif quehacer == 3:
+
+    #Poner un menu de eleccion de que quiere ver
+
+
+    #Creamos el dataframe
+    aux_data_unorder = []
+    for u in lista_peliculas:
+        aux_data_unorder.append(u.data_values())
+
+    
+    data_unorder = pd.DataFrame(aux_data_unorder, columns = ['Titulo', 'Director', 'Año', 'Puntuacion'])
+
+    #Ver todo
+    print(data_unorder)
+
+    #Filtrar por un director
+    
+    director_especifico = input('Escoje un director: ')
+    data_director = data_unorder[data_unorder['Director'] == f'{director_especifico}']
+    print(data_director)
+
+    #Peliculas estrenados en un año x
+
+    año_especifico = int(input('Escoje un año: '))
+    data_año = data_unorder[data_unorder['Año'] == año_especifico]
+    print(data_año)
+
+
+elif quehacer == 4:
+
+    #Creamos el dataframe
+
+    aux_data_ordered = []
+    for u in lista_peliculas_norep:
+        aux_data_ordered.append(u.data_values())
+    
+    aux_data_ordered = pd.DataFrame(aux_data_ordered, columns = ['Titulo', 'Director', 'Año', 'Puntuacion'])
+
+    #Numero de peliculas por director
+    data_peli_dir = aux_data_ordered['Director'].value_counts()
+    print(data_peli_dir)
 
 
 
+    
