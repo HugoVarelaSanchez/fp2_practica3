@@ -101,53 +101,63 @@ class Pelicula:
     def __str__(self) -> str:
         return f'Película: {self.film_name}, Director: {self.director_name}, Estreno: {self.estreno}, Puntuation: {self.puntuation}'
 
-
     @property
     def director_name(self):
         return self._director_name
-    
 
     @property
     def film_name(self):
         return self._film_name
     
-
     @property
     def estreno(self):
         return self._estreno
 
-
     @property
     def puntuation(self):
         return self._puntuation
+    
+    #Metodos magicos comparativos
 
-
-    #Métodos mágicos comparativos
+    #Comparamos si es igual
     def __eq__(self, other):
+
         if self.director_name == other.director_name:
+
             if self.estreno == other.estreno:
+
                 if self.film_name == other.film_name:
                     return self.film_name == other.film_name
+                
             else:
                 return False
         else:
             return False
 
+    #Mayor o igual
     def __ge__(self, other):
+
         if self.director_name == other.director_name:
+
             if self.estreno == other.estreno:
                 return self.film_name >= other.film_name
+            
             else:
                 return self.estreno >= other.estreno
+            
         else:
             return self.director_name >= other.director_name
-        
+
+    #Mayor
     def __gt__(self, other):
         if self.director_name == other.director_name:
+
             if self.estreno == other.estreno:
                 return self.film_name > other.film_name
+            
             else:
                 return self.estreno > other.estreno
+            
         else:
             return self.director_name > other.director_name
         
@@ -157,7 +167,7 @@ class NumberNotInMenu(Exception):
        
 lista_peliculas = lop.LinkedOrderedPositionalList()
 lista_peliculas_norep = lop.LinkedOrderedPositionalList()
-lista_peliculas_copy = lop.LinkedOrderedPositionalList()
+lista_peliculas_copy = lop.LinkedOrderedPositionalList()    #Es lo mismo pero se hace un copi para modificar cosas
 
 with open(archivo, 'r') as contenido:
         info_procesos = contenido.read()
@@ -185,41 +195,39 @@ for line in info_procesos.split('\n'):
         lista_peliculas.add(pelicula)
         lista_peliculas_copy.add(pelicula)
 
+#Mostrar peliculas ordenadas
 if quehacer == 1:
+
     for pelicula in lista_peliculas:
         print(pelicula)
 
-#print(lista_peliculas.get_element(lista_peliculas.after(lista_peliculas.first())).director_name)
-'''elif quehacer == 2:
-    
-elif quehacer == 3:
+elif quehacer == 2:
 
-else:
-'''
+    while True:
+        
+        primero   = lista_peliculas_copy.get_element(lista_peliculas_copy.first())
+        siguiente = lista_peliculas_copy.get_element(lista_peliculas_copy.after(lista_peliculas_copy.first()))
+        ultima    = lista_peliculas_copy.get_element(lista_peliculas_copy.last())
 
-print()
-repetidos = 1
+        if (primero.director_name == siguiente.director_name) and (primero.film_name == siguiente.film_name):
+                
+                lista_peliculas_copy.delete(lista_peliculas_copy.first())
 
-primero = lista_peliculas_copy.get_element(lista_peliculas_copy.first())
-siguiente = lista_peliculas_copy.get_element(lista_peliculas_copy.after(lista_peliculas_copy.first()))
-ultima = lista_peliculas_copy.get_element(lista_peliculas_copy.last())
+        else:
+            
 
-while repetidos == 1:
-    if (primero.director_name == siguiente.director_name) \
-        and \
-            (primero.film_name == siguiente.film_name):
-            lista_peliculas_copy.delete(lista_peliculas_copy.first())
-            siguiente = lista_peliculas_copy.get_element(lista_peliculas_copy.after((lista_peliculas_copy.first())))
+            if siguiente == ultima:
 
-    else:
-        primero = siguiente
-        if siguiente == ultima:
+                lista_peliculas_norep.add(lista_peliculas_copy.delete(lista_peliculas_copy.first()))
+                lista_peliculas_norep.add(lista_peliculas_copy.delete(lista_peliculas_copy.last()))
+                break
+
             lista_peliculas_norep.add(lista_peliculas_copy.delete(lista_peliculas_copy.first()))
-            lista_peliculas_norep.add(lista_peliculas_copy.delete(lista_peliculas_copy.last()))
-            break
-        siguiente = lista_peliculas_copy.get_element(lista_peliculas_copy.after(lista_peliculas_copy.after(lista_peliculas_copy.first())))
-        lista_peliculas_norep.add(lista_peliculas_copy.delete(lista_peliculas_copy.first()))
 
-    
-for i in lista_peliculas_norep:
-    print(i)
+    for i in lista_peliculas_norep:
+        print(i)
+
+
+
+
+
