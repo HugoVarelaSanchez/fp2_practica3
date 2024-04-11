@@ -5,6 +5,7 @@
 import sys
 import array_ordered_positional_list as aop
 import linked_ordered_positional_list as lop
+import time
 
 
 #archivo = sys.argv[1]
@@ -94,7 +95,7 @@ class Pelicula:
 
         self._director_name = director_name
         self._film_name = film_name
-        self._estreno = estreno
+        self._estreno = int(estreno)
         self._puntuation = puntuation
 
     def __str__(self) -> str:
@@ -137,7 +138,7 @@ class Pelicula:
             if self.estreno == other.estreno:
                 return self.film_name >= other.film_name
             else:
-                return self.film_name >= other.estreno
+                return self.estreno >= other.estreno
         else:
             return self.director_name >= other.director_name
         
@@ -146,7 +147,7 @@ class Pelicula:
             if self.estreno == other.estreno:
                 return self.film_name > other.film_name
             else:
-                return self.film_name > other.estreno
+                return self.estreno > other.estreno
         else:
             return self.director_name > other.director_name
         
@@ -155,6 +156,8 @@ class NumberNotInMenu(Exception):
 
        
 lista_peliculas = lop.LinkedOrderedPositionalList()
+lista_peliculas_norep = lop.LinkedOrderedPositionalList()
+lista_peliculas_copy = lop.LinkedOrderedPositionalList()
 
 with open(archivo, 'r') as contenido:
         info_procesos = contenido.read()
@@ -180,13 +183,43 @@ for line in info_procesos.split('\n'):
         pelicula = Pelicula(director_name, film_name, estreno, puntuation)
         
         lista_peliculas.add(pelicula)
+        lista_peliculas_copy.add(pelicula)
 
 if quehacer == 1:
     for pelicula in lista_peliculas:
         print(pelicula)
-elif quehacer == 2:
+
+#print(lista_peliculas.get_element(lista_peliculas.after(lista_peliculas.first())).director_name)
+'''elif quehacer == 2:
     
 elif quehacer == 3:
 
 else:
+'''
 
+print()
+repetidos = 1
+
+primero = lista_peliculas_copy.get_element(lista_peliculas_copy.first())
+siguiente = lista_peliculas_copy.get_element(lista_peliculas_copy.after(lista_peliculas_copy.first()))
+ultima = lista_peliculas_copy.get_element(lista_peliculas_copy.last())
+
+while repetidos == 1:
+    if (primero.director_name == siguiente.director_name) \
+        and \
+            (primero.film_name == siguiente.film_name):
+            lista_peliculas_copy.delete(lista_peliculas_copy.first())
+            siguiente = lista_peliculas_copy.get_element(lista_peliculas_copy.after((lista_peliculas_copy.first())))
+
+    else:
+        primero = siguiente
+        if siguiente == ultima:
+            lista_peliculas_norep.add(lista_peliculas_copy.delete(lista_peliculas_copy.first()))
+            lista_peliculas_norep.add(lista_peliculas_copy.delete(lista_peliculas_copy.last()))
+            break
+        siguiente = lista_peliculas_copy.get_element(lista_peliculas_copy.after(lista_peliculas_copy.after(lista_peliculas_copy.first())))
+        lista_peliculas_norep.add(lista_peliculas_copy.delete(lista_peliculas_copy.first()))
+
+    
+for i in lista_peliculas_norep:
+    print(i)
