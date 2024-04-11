@@ -8,28 +8,75 @@ import linked_ordered_positional_list as lop
 import pandas as pd
 import class_pelicula as peli
 
-def accion(lista_peliculas, lista_peliculas_norep, lista_peliculas_copy, quehacer):
+def accion(lista_peliculas, lista_peliculas_norep, lista_peliculas_copy, quehacer, data_unorder, data_ordered):
     
     if quehacer == 1:
+        print('\nTodas las peliculas:\n')
         for pelicula in lista_peliculas:
             print(pelicula)
 
+
     elif quehacer == 2:
-        for i in lista_peliculas_norep:
-            print(i)
+        print('\nTodas las peliculas sin repetidos:\n')
+        for pelicula in lista_peliculas_norep:
+            print(pelicula)
+
 
     elif quehacer == 3:
-        print(data_unorder)
+
+        eleccion = aux_eleccion_number()
+        
+        if eleccion == 1:
+            print('\n Listado de peliculas tabuladas: \n', data_unorder)
+
+        elif eleccion == 2:
+            director = menu1(eleccion, data_unorder)
+
+            data_director = data_unorder[data_unorder['Director'] == f'{director}']
+            print(f'\nPeliculas de {director}:\n\n', data_director)
+
+        elif eleccion == 3:
+            año = menu1(eleccion, data_unorder)
+
+            data_año = data_unorder[data_unorder['Año'] == año]
+            print(f'\nPeliculas del año: {año}:\n\n', data_año)
 
 
 
-def aux_quehacer():
+    elif quehacer == 4:
+            #1
+            print('\nPeliculas creadas por director: \n')
+            group_col = 'Director'
+            num_peliculas_por_director = data_ordered.groupby(group_col).size()
+            print(num_peliculas_por_director, '\n')
+
+            #2
+            print('\nPuntuacion media por director: \n')
+            group_col = 'Director'
+            target_col = 'Puntuacion'
+            puntuation_per_director = data_ordered.groupby(group_col).agg({target_col :["mean"]})
+            print(puntuation_per_director, '\n')
+
+            #3
+            print('\nPuntuacion media por año: \n')
+            group_col = 'Año'
+            target_col = 'Puntuacion'
+            puntuation_per_year = data_ordered.groupby(group_col).agg({target_col :["mean"]})
+            print(puntuation_per_year, '\n')
+
+
+
+
+
+
+
+def aux_eleccion_number():
     while True:
 
         try:
-            quehacer = int(input('Que quieres ver:\n1)Lista de peliculas ordenadas\n2)Lista de películas ordenadas sin duplicados\n3)Ver algunos listados tabulados\n4)Mostrar métricas\n'))
+            eleccion = int(input('Que quieres hacer: \n    (1)Ver todas las peliculas\n    (2)Peliculas rodadas por un director\n    (3)Peliculas estrenadas en un año\n\n\tEleccion: '))
             
-            if (quehacer<1 or quehacer>4):
+            if (eleccion<1 or eleccion>3):
                 raise peli.NumberNotInMenu
             break
 
@@ -37,11 +84,67 @@ def aux_quehacer():
             print('\nDebes introducir un número\n')
 
         except peli.NumberNotInMenu:
+            print('\nDebe de ser un número del 1 al 3\n')
+
+    return eleccion
+
+
+
+
+def aux_quehacer():
+
+    while True:
+
+        try:
+            quehacer = (input('\n---x---\n\nQue quieres ver:\n1)Lista de peliculas ordenadas\n2)Lista de películas ordenadas sin duplicados\n3)Ver algunos listados tabulados\n4)Mostrar métricas\n\nEleccion: '))
+            if quehacer in ('EXIT', 'exit', 'Exit'):
+                break
+            
+            quehacer = int(quehacer)
+            if (quehacer<1 or quehacer>4):
+                raise peli.NumberNotInMenu
+            break
+            
+
+        except ValueError:
+            print('\nDebes introducir un número\n')
+
+        except peli.NumberNotInMenu:
             print('\nDebe de ser un número del 1 al 4\n')
+
 
     return quehacer
 
-def
+
+
+
+def menu1(eleccion, data_unorder): #n va a ser para si es 1 es para elegir cual
+    
+
+    if eleccion == 2:
+
+        director = input('\nDeme un nombre del director: ')
+
+        while (director not in data_unorder['Director'].values):
+            print('\nNo hay peliculas de este director.Si no es asi, asegurese de escribir el nombre como en la tabla')
+            director = input('\nDeme un nombre del director: ')
+
+        return director
+    
+    elif eleccion == 3:
+
+        año = int(input('\nDeme un año: '))
+
+        while (año not in data_unorder['Año'].values):
+            print('\nNo hay peliculas en ese año')
+            año = int(input('\nDeme un año de alguna pelicula que se encuentre en la tabla: '))
+
+        return año
+
+
+
+
+
 
 def main():
 
@@ -56,7 +159,7 @@ def main():
     lista_peliculas_copy = lop.LinkedOrderedPositionalList()    #Es lo mismo pero se hace un copi para modificar cosas
 
     #Guardamos el contenido del archivo
-    with open(archivo, 'r') as contenido:
+    with open(archivo, 'r', encoding='utf-8') as contenido:
         info_procesos = contenido.read()
 
     #Rellenamos las listas
@@ -110,14 +213,14 @@ def main():
 
     data_unorder = pd.DataFrame(aux_data_unorder, columns = ['Titulo', 'Director', 'Año', 'Puntuacion'])
 
-    aux_data_ordered = pd.DataFrame(aux_data_ordered, columns = ['Titulo', 'Director', 'Año', 'Puntuacion'])
+    data_ordered = pd.DataFrame(aux_data_ordered, columns = ['Titulo', 'Director', 'Año', 'Puntuacion'])
 
-
+    print('Para salir escribir exit')
     quehacer = aux_quehacer()
+    
+    while quehacer not in ('EXIT', 'exit', 'Exit'):
 
-    while quehacer != 'exit':
-
-        accion(lista_peliculas, lista_peliculas_norep, lista_peliculas_copy, quehacer)
+        accion(lista_peliculas, lista_peliculas_norep, lista_peliculas_copy, quehacer, data_unorder, data_ordered)
+        quehacer = aux_quehacer()
         
-        
-
+main()

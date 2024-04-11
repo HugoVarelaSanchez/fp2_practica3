@@ -34,7 +34,7 @@ class Pelicula:
     
     """ 
 
-    def __init__(self,director_name : str, film_name  : str, estreno : str, puntuation : int):
+    def __init__(self,director_name : str, film_name  : str, estreno : str, puntuation : float):
 
         """Asigna atributos al objeto.
 
@@ -65,7 +65,7 @@ class Pelicula:
         self._director_name = director_name
         self._film_name = film_name
         self._estreno = int(estreno)
-        self._puntuation = puntuation
+        self._puntuation = float(puntuation)
 
     #Atributos
 
