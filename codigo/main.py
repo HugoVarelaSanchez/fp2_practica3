@@ -31,7 +31,7 @@ def aux_quehacer():
     while True:
 
         try:
-            quehacer = (input('\n---x---\n\nQue quieres ver:\n(1)Lista de peliculas ordenadas\n(2)Lista de películas ordenadas sin duplicados\n(3)Ver algunos listados tabulados\n(4)Mostrar métricas\n\nEleccion: '))
+            quehacer = (input('\n---x---\n\nQue quieres ver:\n(1)Lista de peliculas ordenadas\n(2)Lista de películas ordenadas sin duplicados (devuelve un archivo txt con las peliculas)\n(3)Ver algunos listados tabulados\n(4)Mostrar métricas\n(exit)Cerrar programa\n\nEleccion: '))
             if quehacer in ('EXIT', 'exit', 'Exit'):
                 break
             
@@ -197,6 +197,13 @@ def accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_n
         for pelicula in lista_peliculas_norep:
             print(pelicula)
 
+        nombre_archivo = input('\n¿Como quieres que se llame el archivo?: ')
+
+        with open(f'{nombre_archivo}', 'w') as archivo:
+            for pelii in lista_peliculas_norep:
+                archivo.write(f'{pelii.director_name}; {pelii.film_name}; {pelii.estreno}; {pelii.puntuation}\n')
+
+
 
     elif quehacer == 3:
 
@@ -327,7 +334,6 @@ def main():
 
     data_no_repeat = pd.DataFrame(aux_data_no_repeat, columns = ['Titulo', 'Director', 'Año', 'Puntuacion'])
 
-    print('Para salir escribir exit')
     quehacer = aux_quehacer()
     
     while quehacer not in ('EXIT', 'exit', 'Exit'):
