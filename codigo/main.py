@@ -6,221 +6,292 @@ import sys, time
 import array_ordered_positional_list as aop
 import linked_ordered_positional_list as lop
 import pandas as pd
+import class_pelicula as peli
 
 
-#archivo = sys.argv[1]
-archivo = 'peliculas.txt'
 
-class Pelicula:
-    """Clase que simula un proceso.
+def aux_quehacer():
+    '''
+    Funcion que ayuda a poder elegir una opcion correcta del menu de opciones.
+    Solo deja escojer numeros entre 1-4, que son las opciones, y la palabra exit, que permite
+    finalizar la ejecucion de este programa.
 
-    Esta clase crea el proceso que ejecutara una CPU o GPU, los cuales se usaran para 
-    simular la ejecucion de estos.
-
+    ---------
+    Parameters
     ----------
-    Attributes
-    ----------
-    
-    film_name: str
-    Es el nombre del proceso.
-
-    director_name: str
-    Es el nombre del usuario que ejecuta el proceso.
-
-    puntuation: int
-    Duracion estimada del procesa. (short / long)
-
-    d_real: int
-    Duracion real del proceso.
-
-    interaccion: int
-    Unidad de tiempo total
-
-    tiempo_inicial: int
-    Unidad en la que el proceso entra a ejecutarse
+    None
 
     -------
-    Methods
+    Returns
+    -------
+    quehacer: int
+    except
+    '''
+
+    while True:
+
+        try:
+            quehacer = (input('\n---x---\n\nQue quieres ver:\n(1)Lista de peliculas ordenadas\n(2)Lista de películas ordenadas sin duplicados\n(3)Ver algunos listados tabulados\n(4)Mostrar métricas\n\nEleccion: '))
+            if quehacer in ('EXIT', 'exit', 'Exit'):
+                break
+            
+            quehacer = int(quehacer)
+            if (quehacer<1 or quehacer>4):
+                raise peli.NumberNotInMenu
+            break
+            
+
+        except ValueError:
+            print('\nDebes introducir un número\n')
+
+        except peli.NumberNotInMenu:
+            print('\nDebe de ser un número del 1 al 4\n')
+
+
+    return quehacer
+
+
+def aux_eleccion_number():
+
+    '''
+    Funcion de ayuda. Esta funcion hace que solo se puedan escojer numeros entre 1-3, para
+    el segundo menu de opciones(Si escojes opcion (3) ). Tambien muestara el segundo menu 
+
+    ---------
+    Parameters
+    ----------
+
+    None
+        
+    -------
+    Returns
     -------
 
-    def __init__ (self, film_name, director_name, estreno, puntuation, d_real,interaccion, tiempo_inicial)
-        Crea los atributos.
+    eleccion : int.
+    '''
 
-    def __str__ (self):
-        Muestra por pantalla el proceso.
+    while True:
+
+        try:
+            eleccion = int(input('Que quieres hacer: \n    (1)Ver todas las peliculas\n    (2)Peliculas rodadas por un director\n    (3)Peliculas estrenadas en un año\n\n\tEleccion: '))
+            
+            if (eleccion<1 or eleccion>3):
+                raise peli.NumberNotInMenu
+            break
+
+        except ValueError:
+            print('\nDebes introducir un número\n')
+
+        except peli.NumberNotInMenu:
+            print('\nDebe de ser un número del 1 al 3\n')
+
+    return eleccion
+
+
+
+
+
+def menu1(eleccion, data_repeat):   #NECESITA CAMBIO  si en año poner algo que no es un int te da un error ya que no peudes poner str, cambiar para que coja str
+    '''
+    Funcion que nos permite, dependiendo de la eleccion del segundo menu, 
+    actuar.
+    Si se escoje la opcion 2, conseguiremos director, que solo funcionara si ponemos el 
+    nombre exacto del director que queremos ver y esta en la tabla.
+    Lo mismo pero para año
+    ---------
+    Parameters
+    ----------
+    eleccion : int
+        Opcion del segundo menu elegida
+
+    data_repeat: DataFrame
+        DataFrame con todos los datos de listas que puede haber repetidos
+
+    -------
+    Returns
+    -------
+
+    director or año:
+
+    director: str
+    año: int
+    '''
+
+
+    if eleccion == 2:
+
+        director = input('\nDeme un nombre del director: ')
+
+        while (director not in data_repeat['Director'].values):
+            print('\nNo hay peliculas de este director.Si no es asi, asegurese de escribir el nombre como en la tabla')
+            director = input('\nDeme un nombre del director: ')
+
+        return director
     
-    """ 
+    elif eleccion == 3:
 
-    def __init__(self,director_name : str, film_name  : str, estreno : str, puntuation : int):
+        #año = int(input('\nDeme un año: '))
 
-        """Asigna atributos al objeto.
+        #while (año not in data_repeat['Año'].values):
+        #    print('\nNo hay peliculas en ese año')
+        #    año = int(input('\nDeme un año de alguna pelicula que se encuentre en la tabla: '))
 
+        #return año
         
-        ----------
-        Parameters
-        ----------
-        film_name: str
-            Es el nombre del proceso.
+        while True:
 
-        director_name: str
-            Es el nombre del usuario que ejecuta el proceso.
+            try:
+                año = int(input('\nDeme un año: '))
+                if (año not in data_repeat['Año'].values):
+                    raise peli.NumberNotInMenu
+                break
+            except ValueError:
+                print('\nDebes introducir un año\n')
+            except peli.NumberNotInMenu:
+                print('\nNo se encuentra ninguna peli con ese año, busque otro\n')
 
-        puntuation: int
-            Duracion estimada del procesa. (short / long)
 
-        d_real: int
-            Duracion real del proceso.
+        return año
 
-        interaccion: int
-            Unidad de tiempo total
 
-        tiempo_inicial: int
-            Unidad en la que el proceso entra a ejecutarse
+
+
+def accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_no_repeat):
+    '''
+    Funcion que ejecuta las acciones del programa. Recibe toda la informacion con la que
+    trabajar pero lo que define que hacer es quehacer. 
+
+    ---------
+    Parameters
+    ----------
+    lista_peliculas : list
+        Una lista con  peliculas repetidas.
+
+    lista_peliculas_norep: list
+        Una pelicula sin  peliculas repetidas
+
+    quehacer : int
+        Accion del menu que se debe tomar
+
+    data_repeat: DateFrame
+        DataFrame con peliculas repetidas
+    
+    data_no_repeat: DataFrame
+        DataFrame con peliculas sin repetir
         
-        penalizado: int
-            Unidad que indica la penalización del proceso
-            0 -> No ha sido penalizado
-            1 -> Ha recibido penalización
-            
-        entrada_cola: int
-            Unidad en la que el proceso entra a su respectiva cola de ejecución
+    -------
+    Returns
+    -------
 
-        ------- 
-        Returns
-        -------
+    Prints.
+    '''
 
-        None.
+    if quehacer == 1:
+        print('\nTodas las peliculas:\n')
+        for pelicula in lista_peliculas:
+            print(pelicula)
 
-        """
 
-        self._director_name = director_name
-        self._film_name = film_name
-        self._estreno = int(estreno)
-        self._puntuation = puntuation
+    elif quehacer == 2:
+        print('\nTodas las peliculas sin repetidos:\n')
+        for pelicula in lista_peliculas_norep:
+            print(pelicula)
 
-    def __str__(self) -> str:
-        return f'Película: {self.film_name}, Director: {self.director_name}, Estreno: {self.estreno}, Puntuation: {self.puntuation}'
 
-    @property
-    def director_name(self):
-        return self._director_name
+    elif quehacer == 3:
 
-    @property
-    def film_name(self):
-        return self._film_name
-    
-    @property
-    def estreno(self):
-        return self._estreno
-
-    @property
-    def puntuation(self):
-        return self._puntuation
-    
-    #Metodos magicos comparativos
-
-    #Comparamos si es igual
-    def __eq__(self, other):
-
-        if self.director_name == other.director_name:
-
-            if self.estreno == other.estreno:
-
-                if self.film_name == other.film_name:
-                    return self.film_name == other.film_name
-                
-            else:
-                return False
-        else:
-            return False
-
-    #Mayor o igual
-    def __ge__(self, other):
-
-        if self.director_name == other.director_name:
-
-            if self.estreno == other.estreno:
-                return self.film_name >= other.film_name
-            
-            else:
-                return self.estreno >= other.estreno
-            
-        else:
-            return self.director_name >= other.director_name
-
-    #Mayor
-    def __gt__(self, other):
-    
-        if self.director_name == other.director_name:
-
-            if self.estreno == other.estreno:
-                return self.film_name > other.film_name
-            
-            else:
-                return self.estreno > other.estreno
-            
-        else:
-            return self.director_name > other.director_name
+        eleccion = aux_eleccion_number()
         
+        if eleccion == 1:
+            print('\n Listado de peliculas tabuladas: \n', data_repeat)
 
-    def data_values(self):
-        lista = [self.film_name, self.director_name, self.estreno, self.puntuation]
-        return lista
+        elif eleccion == 2:
+            director = menu1(eleccion, data_repeat)
+
+            data_director = data_repeat[data_repeat['Director'] == f'{director}']
+            print(f'\nPeliculas de {director}:\n\n', data_director)
+
+        elif eleccion == 3:
+            año = menu1(eleccion, data_repeat)
+
+            data_año = data_repeat[data_repeat['Año'] == año]
+            print(f'\nPeliculas del año: {año}:\n\n', data_año)
+
+
+
+    elif quehacer == 4:
+            #1
+            print('\nPeliculas creadas por director: \n')
+            group_col = 'Director'
+            num_peliculas_por_director = data_no_repeat.groupby(group_col).size()
+            print(num_peliculas_por_director, '\n')
+
+            #2
+            print('\nPuntuacion media por director: \n')
+            group_col = 'Director'
+            target_col = 'Puntuacion'
+            puntuation_per_director = data_no_repeat.groupby(group_col).agg({target_col :["mean"]})
+            print(puntuation_per_director, '\n')
+
+            #3
+            print('\nPuntuacion media por año: \n')
+            group_col = 'Año'
+            target_col = 'Puntuacion'
+            puntuation_per_year = data_no_repeat.groupby(group_col).agg({target_col :["mean"]})
+            print(puntuation_per_year, '\n')
+
+
+
+
+
+
+def main():
+    '''
+    Funcion de ejecucion. Al llamarla se ejecuta todo el programa
+
+    ---------
+    Parameters
+    ----------
+    None
+
+    -------
+    Returns
+    -------
     
-class NumberNotInMenu(Exception):
-    pass
+    '''
 
-       
-lista_peliculas = lop.LinkedOrderedPositionalList()
-lista_peliculas_norep = lop.LinkedOrderedPositionalList()
-lista_peliculas_copy = lop.LinkedOrderedPositionalList()    #Es lo mismo pero se hace un copi para modificar cosas
+    archivo = sys.argv[1]
+    #archivo = 'peliculas.txt'
 
-with open(archivo, 'r') as contenido:
+
+    #Inicializamos las listas
+
+    lista_peliculas       = lop.LinkedOrderedPositionalList()
+    lista_peliculas_norep = lop.LinkedOrderedPositionalList()
+    lista_peliculas_copy  = lop.LinkedOrderedPositionalList()    #Es lo mismo pero se hace un copi para modificar cosas
+
+    #Guardamos el contenido del archivo
+    with open(archivo, 'r', encoding='utf-8') as contenido:
         info_procesos = contenido.read()
 
+    #Rellenamos las listas
 
+    for line in info_procesos.split('\n'):   
 
+        if len(line) != 0 and len(line.split(';')) == 4:
 
+            datos_pelicula = line.split(';')
+            director_name, film_name, estreno, puntuation = datos_pelicula 
 
-while True:
-    try:
-        quehacer = int(input('Que quieres ver:\n1)Lista de peliculas ordenadas\n2)Lista de películas ordenadas sin duplicados\n3)Ver algunos listados tabulados\n4)Mostrar métricas\n'))
-        if (quehacer<1 or quehacer>4):
-            raise NumberNotInMenu
-        break
-    except ValueError:
-        print('\nDebes introducir un número\n')
-    except NumberNotInMenu:
-        print('\nDebe de ser un número del 1 al 4\n')
+            pelicula = peli.Pelicula(director_name, film_name, estreno, puntuation)
+            
+            lista_peliculas.add(pelicula)
+            lista_peliculas_copy.add(pelicula)
+    
 
+    #Rellenamos lista_peliculas_norep
 
-
-
-for line in info_procesos.split('\n'):   
-
-    if len(line) != 0 and len(line.split(';')) == 4:
-
-        datos_pelicula = line.split(';')
-        director_name, film_name, estreno, puntuation = datos_pelicula 
-
-        pelicula = Pelicula(director_name, film_name, estreno, puntuation)
-        
-        lista_peliculas.add(pelicula)
-        lista_peliculas_copy.add(pelicula)
-
-
-
-
-
-
-#Mostrar peliculas ordenadas
-if quehacer == 1:
-
-    for pelicula in lista_peliculas:
-        print(pelicula)
-
-elif quehacer == 2:
-
+    
     while True:
         
         primero   = lista_peliculas_copy.get_element(lista_peliculas_copy.first())
@@ -242,53 +313,28 @@ elif quehacer == 2:
 
             lista_peliculas_norep.add(lista_peliculas_copy.delete(lista_peliculas_copy.first()))
 
-    for i in lista_peliculas_norep:
-        print(i)
+    #Creamos los dataframes con peliculas repetidas y no repetidas
+    aux_data_repeat = []
+    aux_data_no_repeat = []
 
-
-elif quehacer == 3:
-
-    #Poner un menu de eleccion de que quiere ver
-
-
-    #Creamos el dataframe
-    aux_data_unorder = []
     for u in lista_peliculas:
-        aux_data_unorder.append(u.data_values())
+        aux_data_repeat.append(u.data_values())
 
-    
-    data_unorder = pd.DataFrame(aux_data_unorder, columns = ['Titulo', 'Director', 'Año', 'Puntuacion'])
-
-    #Ver todo
-    print(data_unorder)
-
-    #Filtrar por un director
-    
-    director_especifico = input('Escoje un director: ')
-    data_director = data_unorder[data_unorder['Director'] == f'{director_especifico}']
-    print(data_director)
-
-    #Peliculas estrenados en un año x
-
-    año_especifico = int(input('Escoje un año: '))
-    data_año = data_unorder[data_unorder['Año'] == año_especifico]
-    print(data_año)
-
-
-elif quehacer == 4:
-
-    #Creamos el dataframe
-
-    aux_data_ordered = []
     for u in lista_peliculas_norep:
-        aux_data_ordered.append(u.data_values())
+        aux_data_no_repeat.append(u.data_values())
+
+    data_repeat = pd.DataFrame(aux_data_repeat, columns = ['Titulo', 'Director', 'Año', 'Puntuacion'])
+
+    data_no_repeat = pd.DataFrame(aux_data_no_repeat, columns = ['Titulo', 'Director', 'Año', 'Puntuacion'])
+
+    print('Para salir escribir exit')
+    quehacer = aux_quehacer()
     
-    aux_data_ordered = pd.DataFrame(aux_data_ordered, columns = ['Titulo', 'Director', 'Año', 'Puntuacion'])
+    while quehacer not in ('EXIT', 'exit', 'Exit'):
 
-    #Numero de peliculas por director
-    data_peli_dir = aux_data_ordered['Director'].value_counts()
-    print(data_peli_dir)
+        accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_no_repeat)
+        quehacer = aux_quehacer()
+        
 
-
-
-    
+if __name__ == "__main__":
+    main()

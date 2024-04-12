@@ -1,6 +1,6 @@
+#Hugo Varela Sanchez; hugo.varela.sanchez@udc.es
+#David Fernandez Reimundez; david.fernandez.reimundez@udc.es
 class Pelicula:
-
-
     """Clase que almacena los datos de una pelicula.
 
     Esta clase crea una pelicula la cual contiene los datos de esta.
@@ -31,7 +31,18 @@ class Pelicula:
 
     def __str__ (self):
         Muestra por pantalla el proceso.
+
+    def __eq__(self, other):
+        metodo magico que compara si un objeto es igual que otro
     
+    def __ge__(self, other):
+        metodo magico que compara si un objeto es mayor o igual que otro
+
+     def __gt__(self, other):
+        metodo magico que compara si un objeto es mayor que otro
+
+    def data_values(self):
+        metodo de ayuda que devuelve una lista con los datos de la peli
     """ 
 
     def __init__(self,director_name : str, film_name  : str, estreno : str, puntuation : float):
@@ -88,13 +99,35 @@ class Pelicula:
 
     #Metodos magicos:
     def __str__(self) -> str:
+        '''__str__(self):
+            Devuelve la peli por pantalla
+        
+        Parameters
+        ----------
+        self 
+        -------
+        None.
+        '''
+
         return f'Película: {self.film_name}, Director: {self.director_name}, Estreno: {self.estreno}, Puntuation: {self.puntuation}'
 
 
     #Metodos magicos comparativos
 
     #Comparamos si es igual
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
+        '''__eq__(self):
+            Compara si un objeto es igual que otro
+        
+        Parameters
+        ----------
+        self
+
+        other(Pelicula):
+            Es otro objeto del mismo tipo
+        -------
+        Bool.
+        '''
 
         if self.director_name == other.director_name:
 
@@ -109,8 +142,20 @@ class Pelicula:
             return False
 
     #Mayor o igual
-    def __ge__(self, other):
+    def __ge__(self, other) -> bool:
+        '''__ge__(self):
+            Compara si un objeto es mayor o igual que otro
+        
+        Parameters
+        ----------
+        self
 
+        other(Pelicula):
+            Es otro objeto del mismo tipo
+        -------
+        Bool.
+        '''
+        
         if self.director_name == other.director_name:
 
             if self.estreno == other.estreno:
@@ -124,7 +169,19 @@ class Pelicula:
 
     #Mayor
     def __gt__(self, other):
-    
+        '''__gt__(self):
+            Compara si un objeto es mayor que otro
+        
+        Parameters
+        ----------
+        self
+
+        other(Pelicula):
+            Es otro objeto del mismo tipo
+        -------
+        Bool.
+        '''
+
         if self.director_name == other.director_name:
 
             if self.estreno == other.estreno:
@@ -139,11 +196,29 @@ class Pelicula:
 
     #Metodos de ayuda
 
-    def data_values(self):
+    def data_values(self) -> list:
+        '''data_values(self):
+            Devuelve una lista con datos que seran claves para la creacion de los dataframes
+        
+        Parameters
+        ----------
+        self
+o
+        -------
+        list.
+        '''
         lista = [self.film_name, self.director_name, self.estreno, self.puntuation]
         return lista
     
 
 
 class NumberNotInMenu(Exception):
+    """Exceocion
+    Error por si no se selecciona una opcion del menu
+    Attributes
+    ----------
+    NONE
+    -------
+    NONE
+ """ 
     pass
