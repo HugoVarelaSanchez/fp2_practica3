@@ -1,6 +1,8 @@
 #Hugo Varela Sanchez; hugo.varela.sanchez@udc.es
 #David Fernandez Reimundez; david.fernandez.reimundez@udc.es
 
+#Preguntas: Se asumen repetidos en el apartado 4? 
+
 #Importamos la libreris sys, y los archivos para implementar el TAD Lista Posicional Ordenada
 import sys, time
 import array_ordered_positional_list as aop
@@ -9,149 +11,157 @@ import pandas as pd
 import class_pelicula as peli
 
 
+#---------------------------------------------------------------------------------------------------------------
 
-def aux_quehacer():
+def menus(menu, eleccion = int, data_repeat = pd.DataFrame):
     '''
-    Funcion que ayuda a poder elegir una opcion correcta del menu de opciones.
-    Solo deja escojer numeros entre 1-4, que son las opciones, y la palabra exit, que permite
-    finalizar la ejecucion de este programa.
-
-    ---------
-    Parameters
-    ----------
-    None
-
-    -------
-    Returns
-    -------
-    quehacer: int
-    except
-    '''
-
-    while True:
-
-        try:
-            quehacer = (input('\n---x---\n\nQue quieres ver:\n(1)Lista de peliculas ordenadas\n(2)Lista de películas ordenadas sin duplicados (devuelve un archivo txt con las peliculas)\n(3)Ver algunos listados tabulados\n(4)Mostrar métricas\n(exit)Cerrar programa\n\nEleccion: '))
-            if quehacer in ('EXIT', 'exit', 'Exit'):
-                break
-            
-            quehacer = int(quehacer)
-            if (quehacer<1 or quehacer>4):
-                raise peli.NumberNotInMenu
-            break
-            
-
-        except ValueError:
-            print('\nDebes introducir un número\n')
-
-        except peli.NumberNotInMenu:
-            print('\nDebe de ser un número del 1 al 4\n')
-
-
-    return quehacer
-
-
-def aux_eleccion_number():
-
-    '''
-    Funcion de ayuda. Esta funcion hace que solo se puedan escojer numeros entre 1-3, para
-    el segundo menu de opciones(Si escojes opcion (3) ). Tambien muestara el segundo menu 
-
+    Funcion de ayuda. Esta funcion lo que hace gestionar los 4 menus de la practica:
+        El menu de eleccion de tipo de lista
+        El menu de eleccion entre los 4 puntos de la practica.
+        El menu de eleccion entre los puntos del punto 3
+        Un menu para poder elegir (sin tener opcion a poner algo que no debes) director y año
     ---------
     Parameters
     ----------
 
-    None
+    menu: int
+        Eliges que a que menu quieres acceder
+    eleccion = int
+        variable para elegir el menu del apartado 3
+    data_repeat: pd.DataFrame
+        dataframe de las peliculas. Lo usamos para ver si poodemos filtrar por año o director 
+        sin poner algo que no se debe
+
         
     -------
     Returns
     -------
 
-    eleccion : int.
-    '''
-
-    while True:
-
-        try:
-            eleccion = int(input('Que quieres hacer: \n    (1)Ver todas las peliculas\n    (2)Peliculas rodadas por un director\n    (3)Peliculas estrenadas en un año\n\n\tEleccion: '))
-            
-            if (eleccion<1 or eleccion>3):
-                raise peli.NumberNotInMenu
-            break
-
-        except ValueError:
-            print('\nDebes introducir un número\n')
-
-        except peli.NumberNotInMenu:
-            print('\nDebe de ser un número del 1 al 3\n')
-
-    return eleccion
-
-
-
-
-
-def menu1(eleccion, data_repeat):   #NECESITA CAMBIO  si en año poner algo que no es un int te da un error ya que no peudes poner str, cambiar para que coja str
-    '''
-    Funcion que nos permite, dependiendo de la eleccion del segundo menu, 
-    actuar.
-    Si se escoje la opcion 2, conseguiremos director, que solo funcionara si ponemos el 
-    nombre exacto del director que queremos ver y esta en la tabla.
-    Lo mismo pero para año
-    ---------
-    Parameters
-    ----------
+    tipo_lista : int.
+    quehacer : int
     eleccion : int
-        Opcion del segundo menu elegida
-
-    data_repeat: DataFrame
-        DataFrame con todos los datos de listas que puede haber repetidos
-
-    -------
-    Returns
-    -------
-
-    director or año:
-
-    director: str
-    año: int
+    director : str
+    año : int
     '''
 
 
-    if eleccion == 2:
+    #Menu 1 (Eleccion de tipo de listas) (1-2)
+    if menu == 0:
 
-        director = input('\nDeme un nombre del director: ')
-
-        while (director not in data_repeat['Director'].values):
-            print('\nNo hay peliculas de este director.Si no es asi, asegurese de escribir el nombre como en la tabla')
-            director = input('\nDeme un nombre del director: ')
-
-        return director
-    
-    elif eleccion == 3:
-
-        #año = int(input('\nDeme un año: '))
-
-        #while (año not in data_repeat['Año'].values):
-        #    print('\nNo hay peliculas en ese año')
-        #    año = int(input('\nDeme un año de alguna pelicula que se encuentre en la tabla: '))
-
-        #return año
-        
         while True:
 
             try:
-                año = int(input('\nDeme un año: '))
-                if (año not in data_repeat['Año'].values):
+                tipo_lista = int(input('Tipo de lista a usar: \n  (1)Array_ordered_positional_list\n  (2)Linked_ordered_positional_list\n\n  Eleccion: '))
+            
+                if (tipo_lista<1 or tipo_lista>2):
                     raise peli.NumberNotInMenu
                 break
+            
+
             except ValueError:
-                print('\nDebes introducir un año\n')
+                print('\nDebes introducir un número\n')
+
             except peli.NumberNotInMenu:
-                print('\nNo se encuentra ninguna peli con ese año, busque otro\n')
+                print('\nDebe de ser un número del 1 al 2\n')
 
 
-        return año
+        return tipo_lista
+    
+
+
+
+
+    #Menu principal (1-4)
+    elif menu ==1:
+        while True:
+
+            try:
+                quehacer = int(input('\n---x---\n\nQue quieres ver:\n(1)Lista de peliculas ordenadas\n(2)Lista de películas ordenadas sin duplicados (devuelve un archivo txt con las peliculas)\n(3)Ver algunos listados tabulados\n(4)Mostrar métricas\n(5)Cerrar programa\n\nEleccion: '))
+                if quehacer == 5:
+                    sys.exit()
+                
+                
+                if (quehacer<1 or quehacer>4):
+                    raise peli.NumberNotInMenu
+                break
+                
+
+            except ValueError:
+                print('\nDebes introducir un número\n')
+
+            except peli.NumberNotInMenu:
+                print('\nDebe de ser un número del 1 al 4\n')
+
+
+        return quehacer
+
+
+
+
+    #Menu del apartado 2 (Eleccion de peliculas del apartado 3) (1-3)
+    elif menu == 2:
+
+        while True:
+
+            try:
+                eleccion = int(input('Que quieres hacer: \n    (1)Ver todas las peliculas\n    (2)Peliculas rodadas por un director\n    (3)Peliculas estrenadas en un año\n\n\tEleccion: '))
+                
+                if (eleccion<1 or eleccion>3):
+                    raise peli.NumberNotInMenu
+                break
+
+            except ValueError:
+                print('\nDebes introducir un número\n')
+
+            except peli.NumberNotInMenu:
+                print('\nDebe de ser un número del 1 al 3\n')
+
+        return eleccion
+    
+
+
+
+    #Eleccion correcta de año o director apartado 3.2 - 3.3
+    elif menu == 3:
+         
+         if eleccion == 2:
+
+            director = input('\nDeme un nombre del director: ')
+
+            while (director not in data_repeat['Director'].values):
+
+                print('\nNo hay peliculas de este director.Si no es asi, asegurese de escribir el nombre como en la tabla')
+                director = input('\nDeme un nombre del director: ')
+
+            return director
+        
+
+
+
+         elif eleccion == 3:
+
+            while True:
+
+                try:
+                    año = int(input('\nDeme un año: '))
+
+                    if (año not in data_repeat['Año'].values):
+                        raise peli.NumberNotInMenu
+                    break
+
+                except ValueError:
+                    print('\nDebes introducir un año\n')
+
+                except peli.NumberNotInMenu:
+                    print('\nNo se encuentra ninguna peli con ese año, busque otro\n')
+
+
+            return año
+
+
+
+
+
 
 
 
@@ -191,6 +201,8 @@ def accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_n
         for pelicula in lista_peliculas:
             print(pelicula)
 
+    #---------------------------------------------------------------------------------
+
 
     elif quehacer == 2:
         print('\nTodas las peliculas sin repetidos:\n')
@@ -199,32 +211,40 @@ def accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_n
 
         nombre_archivo = input('\n¿Como quieres que se llame el archivo?: ')
 
-        with open(f'{nombre_archivo}', 'w') as archivo:
+        with open(f'{nombre_archivo}', 'w', encoding='utf-8') as archivo:
             for pelii in lista_peliculas_norep:
                 archivo.write(f'{pelii.director_name}; {pelii.film_name}; {pelii.estreno}; {pelii.puntuation}\n')
 
 
 
+    #------------------------------------------------------------------------------
+
+
     elif quehacer == 3:
 
-        eleccion = aux_eleccion_number()
+        eleccion = menus(2)
         
+
         if eleccion == 1:
             print('\n Listado de peliculas tabuladas: \n', data_repeat)
 
+
+
         elif eleccion == 2:
-            director = menu1(eleccion, data_repeat)
+            director = menus(3, eleccion, data_repeat)
 
             data_director = data_repeat[data_repeat['Director'] == f'{director}']
             print(f'\nPeliculas de {director}:\n\n', data_director)
 
+
         elif eleccion == 3:
-            año = menu1(eleccion, data_repeat)
+            año = menus(3, eleccion, data_repeat)
 
             data_año = data_repeat[data_repeat['Año'] == año]
             print(f'\nPeliculas del año: {año}:\n\n', data_año)
-
-
+    
+    
+    #-------------------------------------------------------------------------------
 
     elif quehacer == 4:
             #1
@@ -251,6 +271,10 @@ def accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_n
 
 
 
+#-----------------------------------------------------------------------------------------------------------------------------------
+
+
+
 
 def main():
     '''
@@ -273,9 +297,20 @@ def main():
 
     #Inicializamos las listas
 
-    lista_peliculas       = lop.LinkedOrderedPositionalList()
-    lista_peliculas_norep = lop.LinkedOrderedPositionalList()
-    lista_peliculas_copy  = lop.LinkedOrderedPositionalList()    #Es lo mismo pero se hace un copi para modificar cosas
+    #Elegimos con que tipo de listas queremos hacer la practica
+
+    tipo_lista = menus(0)
+
+
+    if tipo_lista == 1:
+        lista_peliculas       = aop.ArrayOrderedPositionalList()
+        lista_peliculas_norep = aop.ArrayOrderedPositionalList()
+        lista_peliculas_copy  = aop.ArrayOrderedPositionalList()  
+
+    else:
+        lista_peliculas       = lop.LinkedOrderedPositionalList()
+        lista_peliculas_norep = lop.LinkedOrderedPositionalList()
+        lista_peliculas_copy  = lop.LinkedOrderedPositionalList()
 
     #Guardamos el contenido del archivo
     with open(archivo, 'r', encoding='utf-8') as contenido:
@@ -334,12 +369,12 @@ def main():
 
     data_no_repeat = pd.DataFrame(aux_data_no_repeat, columns = ['Titulo', 'Director', 'Año', 'Puntuacion'])
 
-    quehacer = aux_quehacer()
+    quehacer = menus(1)
     
-    while quehacer not in ('EXIT', 'exit', 'Exit'):
+    while True:
 
         accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_no_repeat)
-        quehacer = aux_quehacer()
+        quehacer = menus(1)
         
 
 if __name__ == "__main__":
