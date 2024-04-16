@@ -304,13 +304,30 @@ def accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_n
             if opcion == True:
                 print('\n Listado de peliculas tabuladas: \n', conclusion_data)
             else:
-                new_aux_list = [f'\tTitulo \t\tDirector \tFecha Estreno \tPuntuacion\n']
+                new_aux_list = ['Título', 'Director', 'Año','Puntuación']
+                cadena_sup = ''
+                for i in new_aux_list:
+                    columna =  f"{i: ^37}"
+                    cadena_sup = cadena_sup + f'\t{columna}'
 
                 
 
-                print('\n', new_aux_list[0])
+                print('\n',cadena_sup)
+
+                separador = '-'*37
+                lineas = f'\t{separador}'*4
+                print(lineas)
+                
                 for i in conclusion:
-                    print(f'\t{i.film_name}\t\t{i.director_name}\t\t{i.estreno}\t{i.puntuation}')
+                    film_name = f"{i.film_name: ^37}" 
+                    director_name = f"{i.director_name: ^37}" 
+                    estreno =  f"{i.estreno: ^37}" 
+                    puntuation = f"{i.puntuation: ^37}"
+                    print(f"\t{film_name}\t{director_name}\t{estreno}\t{puntuation}")
+
+                separador = '-'*37
+                lineas = f'\t{separador}'*4
+                print(lineas)
 
                 # if opcion == True:
                     
