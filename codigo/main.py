@@ -186,6 +186,33 @@ def menus(menu, eleccion = int, data_repeat = pd.DataFrame):
         else:
             rescata = False
         return rescata
+    
+
+
+
+    elif menu == 5:
+        
+        while True:
+
+            try:
+                opcion = int(input('\nQuieres usar repetidos, ¿si o no?: \n  (1)SI usar repetidos\n  (2)NO usar repetidos\n\n  Eleccion: '))
+            
+                if (opcion<1 or opcion>2):
+                    raise peli.NumberNotInMenu
+                break
+            
+
+            except ValueError:
+                print('\nDebes introducir un número\n')
+
+            except peli.NumberNotInMenu:
+                print('\nDebe de ser un número del 1 al 2\n')
+
+        if opcion == 1:
+            rescata = True
+        else:
+            rescata = False
+        return rescata
 
 
 
@@ -242,60 +269,130 @@ def accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_n
 
 
 
+
+
+
     #------------------------------------------------------------------------------
 
 
     elif quehacer == 3:
 
+
+
+
+
         eleccion = menus(2)
         
 
+
+
+
+
         if eleccion == 1:
-            print('\n Listado de peliculas tabuladas: \n', data_repeat)
+
+            opcion = menus(5)
+
+            if opcion == True:
+                    conclusion = lista_peliculas
+                    conclusion_data = data_repeat
+            else:
+                    conclusion = lista_peliculas_norep
+                    conclusion_data = data_no_repeat
+
+            opcion = menus(4)
+
+            if opcion == True:
+                print('\n Listado de peliculas tabuladas: \n', conclusion_data)
+            else:
+                new_aux_list = [f'\tTitulo \t\tDirector \tFecha Estreno \tPuntuacion\n']
+
+                
+
+                print('\n', new_aux_list[0])
+                for i in conclusion:
+                    print(f'\t{i.film_name}\t\t{i.director_name}\t\t{i.estreno}\t{i.puntuation}')
+
+                # if opcion == True:
+                    
+                #     print('\n', new_aux_list[0])
+                #     for i in lista_peliculas:
+                #         print(f'\t{i.film_name}\t\t{i.director_name}\t\t{i.estreno}\t{i.puntuation}')
+                
+                # else:
+                #     print('\n', new_aux_list[0])
+                #     for i in lista_peliculas_norep:
+                #         print(f'\t{i.film_name}\t\t{i.director_name}\t\t{i.estreno}\t{i.puntuation}')
+
+
+
+
 
 
 
         elif eleccion == 2:
+
             director = menus(3, eleccion, data_repeat)
             
+            opcion = menus(5)
+            
+            if opcion == True:
+                    conclusion = lista_peliculas
+                    conclusion_data = data_repeat
+            else:
+    
+                    conclusion = lista_peliculas_norep
+                    conclusion_data = data_no_repeat
             
             opcion = menus(4)
 
             if opcion == True:
-            
-                data_director = data_repeat[data_repeat['Director'] == f'{director}']
+                
+                
+                data_director = conclusion_data[conclusion_data['Director'] == director]
                 print(f'\nPeliculas de {director}:\n\n', data_director)
 
             else:
+                
+
                 new_aux_list = [f'\tTitulo \t\tDirector \tFecha Estreno \tPuntuacion\n']
 
 
-                for i in lista_peliculas:
-
+                for i in conclusion:
+                    
                     if i.director_name == director:
                         new_aux_list.append(i)
 
                 if len(new_aux_list) > 1:
 
                     print('\n', new_aux_list[0])
-                    for i in new_aux_list[1:]:
+                    for i in conclusion:
                         print(f'\t{i.film_name}\t\t{i.director_name}\t\t{i.estreno}\t{i.puntuation}')
 
 
         elif eleccion == 3:
             año = menus(3, eleccion, data_repeat)
 
+            opcion = menus(5)
+
+            if opcion == True:
+                    conclusion = lista_peliculas
+                    conclusion_data = data_repeat
+            else:
+                    conclusion = lista_peliculas_norep
+                    conclusion_data = data_no_repeat
+
+
             opcion = menus(4)
 
             if opcion==True:
-                data_año = data_repeat[data_repeat['Año'] == año]
+                data_año = conclusion_data[conclusion_data['Año'] == año]
                 print(f'\nPeliculas del año: {año}:\n\n', data_año)
 
             else:
                 new_aux_list = [f'\tTitulo \t\tDirector \tFecha Estreno \tPuntuacion\n']
 
 
-                for i in lista_peliculas:
+                for i in conclusion:
 
                     if i.estreno == año:
                         new_aux_list.append(i)
@@ -303,33 +400,51 @@ def accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_n
                 if len(new_aux_list) > 1:
 
                     print('\n', new_aux_list[0])
-                    for i in new_aux_list[1:]:
+                    for i in conclusion:
                         print(f'{i.film_name}\t{i.director_name}\t{i.estreno}\t{i.puntuation}')
     
     
+
+
+
     #-------------------------------------------------------------------------------
 
     elif quehacer == 4:
+            
+            opcion = menus(5)
+
+            if opcion == True:
+                    conclusion = lista_peliculas
+                    conclusion_data = data_repeat
+            else:
+                    conclusion = lista_peliculas_norep
+                    conclusion_data = data_no_repeat
+
+
+
+            
             #1
             print('\nPeliculas creadas por director: \n')
             group_col = 'Director'
-            num_peliculas_por_director = data_repeat.groupby(group_col).size()
+            num_peliculas_por_director = conclusion_data.groupby(group_col).size()
             print(num_peliculas_por_director, '\n')
 
             #2
             print('\nPuntuacion media por director: \n')
             group_col = 'Director'
             target_col = 'Puntuacion'
-            puntuation_per_director = data_repeat.groupby(group_col).agg({target_col :["mean"]})
+            puntuation_per_director = conclusion_data.groupby(group_col).agg({target_col :["mean"]})
             print(puntuation_per_director, '\n')
 
             #3
             print('\nPuntuacion media por año: \n')
             group_col = 'Año'
             target_col = 'Puntuacion'
-            puntuation_per_year = data_repeat.groupby(group_col).agg({target_col :["mean"]})
+            puntuation_per_year = conclusion_data.groupby(group_col).agg({target_col :["mean"]})
             print(puntuation_per_year, '\n')
 
+
+            
 
 
 
