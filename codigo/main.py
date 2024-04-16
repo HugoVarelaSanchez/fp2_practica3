@@ -357,29 +357,29 @@ def accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_n
                 new_aux_list = [f'\tTitulo \t\tDirector \tFecha Estreno \tPuntuacion\n']
 
 
+                new_aux_list = [f'\tTitulo \t\tDirector \tFecha Estreno \tPuntuacion\n']
+                lista_de_autores = []
                 for i in conclusion:
-                    
                     if i.director_name == director:
-                        new_aux_list.append(i)
+                        lista_de_autores.append(i)
 
-                if len(new_aux_list) > 1:
-
-                    print('\n', new_aux_list[0])
-                    for i in conclusion:
-                        print(f'\t{i.film_name}\t\t{i.director_name}\t\t{i.estreno}\t{i.puntuation}')
+                if len(lista_de_autores) >= 1:
+                    print(new_aux_list[0])
+                    for i in lista_de_autores:
+                        print(f'{i.film_name}\t{i.director_name}\t{i.estreno}\t{i.puntuation}')
 
 
         elif eleccion == 3:
             año = menus(3, eleccion, data_repeat)
 
             opcion = menus(5)
-
-            if opcion == True:
-                    conclusion = lista_peliculas
-                    conclusion_data = data_repeat
+            print(opcion)
+            if opcion:
+                conclusion = lista_peliculas
+                conclusion_data = data_repeat
             else:
-                    conclusion = lista_peliculas_norep
-                    conclusion_data = data_no_repeat
+                conclusion = lista_peliculas_norep
+                conclusion_data = data_no_repeat
 
 
             opcion = menus(4)
@@ -389,18 +389,16 @@ def accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_n
                 print(f'\nPeliculas del año: {año}:\n\n', data_año)
 
             else:
+                
                 new_aux_list = [f'\tTitulo \t\tDirector \tFecha Estreno \tPuntuacion\n']
-
-
+                lista_de_estrenos = []
                 for i in conclusion:
-
                     if i.estreno == año:
-                        new_aux_list.append(i)
+                        lista_de_estrenos.append(i)
 
-                if len(new_aux_list) > 1:
-
-                    print('\n', new_aux_list[0])
-                    for i in conclusion:
+                if len(lista_de_estrenos) >= 1:
+                    print(new_aux_list[0])
+                    for i in lista_de_estrenos:
                         print(f'{i.film_name}\t{i.director_name}\t{i.estreno}\t{i.puntuation}')
     
     
