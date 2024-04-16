@@ -216,6 +216,26 @@ def menus(menu, eleccion = int, data_repeat = pd.DataFrame):
 
 
 
+    elif menu == 6:
+
+        while True:
+
+            try:
+                eleccion = int(input('\n¿Quieres guardar la nueva lista?: \n    (1)SI\n    (2)NO\n\n\tEleccion: '))
+                
+                if (eleccion<1 or eleccion>2):
+                    raise peli.NumberNotInMenu
+                break
+
+            except ValueError:
+                print('\nDebes introducir un número\n')
+
+            except peli.NumberNotInMenu:
+                print('\nDebe de ser un número del 1 al 2\n')
+
+        return eleccion
+
+
 
 
 def accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_no_repeat):
@@ -261,13 +281,18 @@ def accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_n
         for pelicula in lista_peliculas_norep:
             print(pelicula)
 
-        nombre_archivo = input('\n¿Como quieres que se llame el archivo?: ')
+        aux_eleccion = menus(6)
 
-        with open(f'{nombre_archivo}', 'w', encoding='utf-8') as archivo:
-            for pelii in lista_peliculas_norep:
-                archivo.write(f'{pelii.director_name}; {pelii.film_name}; {pelii.estreno}; {pelii.puntuation}\n')
+        if aux_eleccion == 1:
 
+            nombre_archivo = input('\n¿Como quieres que se llame el archivo?: ')
 
+            with open(f'{nombre_archivo}', 'w', encoding='utf-8') as archivo:
+                for pelii in lista_peliculas_norep:
+                    archivo.write(f'{pelii.director_name}; {pelii.film_name}; {pelii.estreno}; {pelii.puntuation}\n')
+
+        else:
+            pass
 
 
 
@@ -325,6 +350,7 @@ def accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_n
 
 
 
+    #-------------------------------------------------------------------------------
 
 
 
@@ -367,6 +393,10 @@ def accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_n
                     print(new_aux_list[0])
                     for i in lista_de_autores:
                         print(f'{i.film_name}\t{i.director_name}\t{i.estreno}\t{i.puntuation}')
+
+
+    #-------------------------------------------------------------------------------
+
 
 
         elif eleccion == 3:

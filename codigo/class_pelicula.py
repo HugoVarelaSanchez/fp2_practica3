@@ -109,7 +109,8 @@ class Pelicula:
         None.
         '''
 
-        return f'Película: {self.film_name}, Director: {self.director_name}, Estreno: {self.estreno}, Puntuation: {self.puntuation}'
+        #return f'Película: {self.film_name}, Director: {self.director_name}, Estreno: {self.estreno}, Puntuation: {self.puntuation}'
+        return f'Director: {self.director_name}, Pelicula: {self.film_name} Estreno: {self.estreno}, Puntuation: {self.puntuation}'
 
 
     #Metodos magicos comparativos
