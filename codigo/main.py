@@ -19,11 +19,36 @@ import class_pelicula as peli
 
 def menus(menu, eleccion = int, data_repeat = pd.DataFrame):
     '''
-    Funcion de ayuda. Esta funcion lo que hace gestionar los 4 menus de la practica:
-        El menu de eleccion de tipo de lista
-        El menu de eleccion entre los 4 puntos de la practica.
-        El menu de eleccion entre los puntos del punto 3
-        Un menu para poder elegir (sin tener opcion a poner algo que no debes) director y año
+    Funcion de ayuda muy extensa. 
+    Esta funcion lo que hace gestionar los 'menus' de la practica:
+
+        El menu == 0 Es el primero que aparece, y aparece siempre. 
+            Elige si quieres usar lop o aop
+
+        El menu == 1 Es el menu principal.
+            Te da a cual de los 4 puntos principales de la practica quieres usar
+
+        El menu == 2 Menu del apartado 3
+            Submenu para elegir cual de las 3 opciones del apartado 3 quieres realizar
+
+        El menu == 3 no es un menu pero se usa para que no puedas introducir un valor
+            que no debas en la eleccion de director o año de los subpuntos del apartado 3
+        
+        El menu == 4 Dada la primera implementacion de visualizar listas 
+            tabuladas con pandas, implementamos otra opcion para verlas a traves de 
+            bucles y tabulacion. Puedes elegir cual de las dos formas las quieres 
+            visualizar en el apartado 3
+        
+        El menu == 5 Como el pdf no viene bien explicado, y para dar mas variedad
+            de opcion, tambien se implemento que se pueda elegir si se quiere las
+            tablas con o sin peliculas repetidas en el apartado 3-4
+
+        El menu == 6 Es simplemente un 'Menu' Donde te restringe poner algo
+            distinto de 1 o 0, con las opciones llamadas si/no. Principalmente 
+            se implementa para el punto 2, ya que se le puede dar al 2 sin querer 
+            en el menu principal y no gusta si se le da sin querer tener que cerrar
+            el programa o guardar un archivo obligatoriamente.
+
     ---------
     Parameters
     ----------
@@ -242,6 +267,7 @@ def accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_n
     '''
     Funcion que ejecuta las acciones del programa. Recibe toda la informacion con la que
     trabajar pero lo que define que hacer es quehacer. 
+    
 
     ---------
     Parameters
@@ -274,6 +300,10 @@ def accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_n
             print(pelicula)
 
     #---------------------------------------------------------------------------------
+
+
+
+
 
 
     elif quehacer == 2:
