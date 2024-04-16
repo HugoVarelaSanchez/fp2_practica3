@@ -10,23 +10,23 @@ class Pelicula:
     ----------
     
     film_name: str
-    Es el nombre del proceso.
+        Es el nombre del proceso.
 
     director_name: str
-    Es el nombre del usuario que ejecuta el proceso.
+        Es el nombre del usuario que ejecuta el proceso.
 
-    puntuation: int
-    Duracion estimada del procesa. (short / long)
+    estreno : int
+        año de estreno
 
-    d_real: int
-    Duracion real del proceso.
+    puntuacion : float
+        nota de la pelicula
 
 
     -------
     Methods
     -------
 
-    def __init__ (self, film_name, director_name, estreno, puntuation, d_real,interaccion, tiempo_inicial)
+    def __init__ (self, film_name, director_name, estreno, puntuation)
         Crea los atributos.
 
     def __str__ (self):
