@@ -1,10 +1,7 @@
 #Hugo Varela Sanchez; hugo.varela.sanchez@udc.es
 #David Fernandez Reimundez; david.fernandez.reimundez@udc.es
 
-#Preguntas: Se asumen repetidos en el apartado 4? Asumimos no repetidos
-#Recordar: implementar opcion de cancelar y volver menu principal
-#Implementar poder elegir por que las quieres ordenar
-#Implementar si en el apartado 3-4 se trate con las listas con/sin repetidas
+#Hay que filtrar el apartado 2-3 por listas en vez del dataframe
 
 
 #Importamos la libreris sys, y los archivos para implementar el TAD Lista Posicional Ordenada
@@ -17,7 +14,8 @@ import class_pelicula as peli
 
 #---------------------------------------------------------------------------------------------------------------
 
-def menus(menu, eleccion = int, data_repeat = pd.DataFrame):
+def menus(menu,  eleccion = int, data_repeat = pd.DataFrame, lista = list):
+    
     '''
     Funcion de ayuda muy extensa. 
     Esta funcion lo que hace gestionar los 'menus' de la practica:
@@ -73,19 +71,32 @@ def menus(menu, eleccion = int, data_repeat = pd.DataFrame):
     año : int
     '''
 
+    
+    if menu in (0, 4, 5, 6):
+          
 
-    #Menu 1 (Eleccion de tipo de listas) (1-2)
-    if menu == 0:
+        
+        if menu == 0:
+            salida = 'Tipo de lista a usar: \n  (1)Array_ordered_positional_list\n  (2)Linked_ordered_positional_list\n\n  Eleccion: '
+
+        elif menu == 4:
+            salida = '\nForma de visualizar listas: \n  (1)DataFrame\n  (2)Tabulacion\n\n  Eleccion: '
+
+        elif menu == 5:
+            salida = '\nQuieres usar repetidos, ¿si o no?: \n  (1)SI usar repetidos\n  (2)NO usar repetidos\n\n  Eleccion: '
+        
+        elif menu == 6:
+               salida = '\n¿Quieres guardar la nueva lista?: \n    (1)SI\n    (2)NO\n\n\tEleccion: '
+
 
         while True:
 
             try:
-                tipo_lista = int(input('Tipo de lista a usar: \n  (1)Array_ordered_positional_list\n  (2)Linked_ordered_positional_list\n\n  Eleccion: '))
-            
-                if (tipo_lista<1 or tipo_lista>2):
+                eleccion = int(input(salida))
+                
+                if (eleccion<1 or eleccion>2):
                     raise peli.NumberNotInMenu
                 break
-            
 
             except ValueError:
                 print('\nDebes introducir un número\n')
@@ -94,13 +105,15 @@ def menus(menu, eleccion = int, data_repeat = pd.DataFrame):
                 print('\nDebe de ser un número del 1 al 2\n')
 
 
-        return tipo_lista
+        if eleccion == 1:
+            opcion  = True
+
+        else:
+            opcion = False
+
+        return opcion
+     
     
-
-
-
-
-    #Menu principal (1-4)
     elif menu ==1:
         while True:
 
@@ -124,10 +137,6 @@ def menus(menu, eleccion = int, data_repeat = pd.DataFrame):
 
         return quehacer
 
-
-
-
-    #Menu del apartado 2 (Eleccion de peliculas del apartado 3) (1-3)
     elif menu == 2:
 
         while True:
@@ -146,11 +155,7 @@ def menus(menu, eleccion = int, data_repeat = pd.DataFrame):
                 print('\nDebe de ser un número del 1 al 3\n')
 
         return eleccion
-    
-
-
-
-    #Eleccion correcta de año o director apartado 3.2 - 3.3
+     
     elif menu == 3:
          
          if eleccion == 2:
@@ -186,79 +191,47 @@ def menus(menu, eleccion = int, data_repeat = pd.DataFrame):
 
 
             return año
+         
 
 
-    elif menu == 4:
-        rescata = bool
-        while True:
+         elif eleccion == 4:
+             
+             director = input('\nDeme un nombre del director: ')
+             aux = []
 
-            try:
-                opcion = int(input('\nForma de visualizar listas: \n  (1)DataFrame\n  (2)Tabulacion\n\n  Eleccion: '))
-            
-                if (opcion<1 or opcion>2):
-                    raise peli.NumberNotInMenu
-                break
-            
+             for y in lista:
+                 aux.append(y.director_name)
 
-            except ValueError:
-                print('\nDebes introducir un número\n')
+             while (director not in aux):
 
-            except peli.NumberNotInMenu:
-                print('\nDebe de ser un número del 1 al 2\n')
+                print('\nNo hay peliculas de este director. Si no es asi, asegurese de escribir el nombre como en la tabla')
+                director = input('\nDeme un nombre del director: ')
 
-        if opcion == 1:
-            rescata = True
-        else:
-            rescata = False
-        return rescata
-    
+             return director
+         
 
+         elif eleccion == 5:
+            aux = []
+            for y in lista:
+                 aux.append(y.estreno)
 
+            while True:
 
-    elif menu == 5:
-        
-        while True:
+                try:
+                    año = int(input('\nDeme un año: '))
 
-            try:
-                opcion = int(input('\nQuieres usar repetidos, ¿si o no?: \n  (1)SI usar repetidos\n  (2)NO usar repetidos\n\n  Eleccion: '))
-            
-                if (opcion<1 or opcion>2):
-                    raise peli.NumberNotInMenu
-                break
-            
+                    if (año not in aux):
+                        raise peli.NumberNotInMenu
+                    break
 
-            except ValueError:
-                print('\nDebes introducir un número\n')
+                except ValueError:
+                    print('\nDebes introducir un año\n')
 
-            except peli.NumberNotInMenu:
-                print('\nDebe de ser un número del 1 al 2\n')
-
-        if opcion == 1:
-            rescata = True
-        else:
-            rescata = False
-        return rescata
+                except peli.NumberNotInMenu:
+                    print('\nNo se encuentra ninguna peli con ese año, busque otro\n')
 
 
-
-    elif menu == 6:
-
-        while True:
-
-            try:
-                eleccion = int(input('\n¿Quieres guardar la nueva lista?: \n    (1)SI\n    (2)NO\n\n\tEleccion: '))
-                
-                if (eleccion<1 or eleccion>2):
-                    raise peli.NumberNotInMenu
-                break
-
-            except ValueError:
-                print('\nDebes introducir un número\n')
-
-            except peli.NumberNotInMenu:
-                print('\nDebe de ser un número del 1 al 2\n')
-
-        return eleccion
+            return año
 
 
 
@@ -313,7 +286,7 @@ def accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_n
 
         aux_eleccion = menus(6)
 
-        if aux_eleccion == 1:
+        if aux_eleccion == True:
 
             nombre_archivo = input('\n¿Como quieres que se llame el archivo?: ')
 
@@ -359,25 +332,32 @@ def accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_n
             if opcion == True:
                 print('\n Listado de peliculas tabuladas: \n', conclusion_data)
             else:
-                new_aux_list = [f'\tTitulo \t\tDirector \tFecha Estreno \tPuntuacion\n']
+                new_aux_list = ['Título', 'Director', 'Año','Puntuación']
+                cadena_sup = ''
+                for i in new_aux_list:
+                    columna =  f"{i: ^37}"
+                    cadena_sup = cadena_sup + f'\t{columna}'
 
                 
 
-                print('\n', new_aux_list[0])
+                print('\n',cadena_sup)
+
+                separador = '-'*37
+                lineas = f'\t{separador}'*4
+                print(lineas)
+                
                 for i in conclusion:
-                    print(f'\t{i.film_name}\t\t{i.director_name}\t\t{i.estreno}\t{i.puntuation}')
+                    film_name = f"{i.film_name: ^37}" 
+                    director_name = f"{i.director_name: ^37}" 
+                    estreno =  f"{i.estreno: ^37}" 
+                    puntuation = f"{i.puntuation: ^37}"
+                    print(f"\t{film_name}\t{director_name}\t{estreno}\t{puntuation}")
 
-                # if opcion == True:
-                    
-                #     print('\n', new_aux_list[0])
-                #     for i in lista_peliculas:
-                #         print(f'\t{i.film_name}\t\t{i.director_name}\t\t{i.estreno}\t{i.puntuation}')
-                
-                # else:
-                #     print('\n', new_aux_list[0])
-                #     for i in lista_peliculas_norep:
-                #         print(f'\t{i.film_name}\t\t{i.director_name}\t\t{i.estreno}\t{i.puntuation}')
+                separador = '-'*37
+                lineas = f'\t{separador}'*4
+                print(lineas)
 
+               
 
 
     #-------------------------------------------------------------------------------
@@ -387,7 +367,7 @@ def accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_n
 
         elif eleccion == 2:
 
-            director = menus(3, eleccion, data_repeat)
+            
             
             opcion = menus(5)
             
@@ -403,34 +383,54 @@ def accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_n
 
             if opcion == True:
                 
-                
+                director = menus(3, eleccion, data_repeat)
+
                 data_director = conclusion_data[conclusion_data['Director'] == director]
                 print(f'\nPeliculas de {director}:\n\n', data_director)
+
 
             else:
                 
 
-                new_aux_list = [f'\tTitulo \t\tDirector \tFecha Estreno \tPuntuacion\n']
+                director = menus(3, 4, data_repeat, conclusion)
 
+                new_aux_list = ['Título', 'Director', 'Año','Puntuación']
+                cadena_sup = ''
+                for i in new_aux_list:
+                    columna =  f"{i: ^37}"
+                    cadena_sup = cadena_sup + f'\t{columna}'
 
-                new_aux_list = [f'\tTitulo \t\tDirector \tFecha Estreno \tPuntuacion\n']
-                lista_de_autores = []
-                for i in conclusion:
-                    if i.director_name == director:
-                        lista_de_autores.append(i)
+                
 
-                if len(lista_de_autores) >= 1:
-                    print(new_aux_list[0])
-                    for i in lista_de_autores:
-                        print(f'{i.film_name}\t{i.director_name}\t{i.estreno}\t{i.puntuation}')
+                print('\n',cadena_sup)
 
+                separador = '-'*37
+                lineas = f'\t{separador}'*4
+                print(lineas)
+                
+                aux = []
+                for y in conclusion:
+                    if director == y.director_name:
+                        aux.append(y)
+
+                for i in aux:
+                    
+                    film_name = f"{i.film_name: ^37}" 
+                    director_name = f"{i.director_name: ^37}" 
+                    estreno =  f"{i.estreno: ^37}" 
+                    puntuation = f"{i.puntuation: ^37}"
+                    print(f"\t{film_name}\t{director_name}\t{estreno}\t{puntuation}")
+
+                separador = '-'*37
+                lineas = f'\t{separador}'*4
+                print(lineas)
 
     #-------------------------------------------------------------------------------
 
 
 
         elif eleccion == 3:
-            año = menus(3, eleccion, data_repeat)
+            
 
             opcion = menus(5)
             print(opcion)
@@ -445,21 +445,45 @@ def accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_n
             opcion = menus(4)
 
             if opcion==True:
+                año = menus(3, eleccion, data_repeat)
                 data_año = conclusion_data[conclusion_data['Año'] == año]
                 print(f'\nPeliculas del año: {año}:\n\n', data_año)
 
             else:
                 
-                new_aux_list = [f'\tTitulo \t\tDirector \tFecha Estreno \tPuntuacion\n']
-                lista_de_estrenos = []
-                for i in conclusion:
-                    if i.estreno == año:
-                        lista_de_estrenos.append(i)
+                año = menus(3, 5, data_repeat, conclusion)
 
-                if len(lista_de_estrenos) >= 1:
-                    print(new_aux_list[0])
-                    for i in lista_de_estrenos:
-                        print(f'{i.film_name}\t{i.director_name}\t{i.estreno}\t{i.puntuation}')
+
+                new_aux_list = ['Título', 'Director', 'Año','Puntuación']
+                cadena_sup = ''
+
+                for i in new_aux_list:
+                    columna =  f"{i: ^37}"
+                    cadena_sup = cadena_sup + f'\t{columna}'
+
+                print('\n',cadena_sup)
+
+                separador = '-'*37
+                lineas = f'\t{separador}'*4
+                print(lineas)
+                
+                aux = []
+
+                for y in conclusion:
+                    if año == y.estreno:
+                        aux.append(y)
+
+                for i in aux:
+                    
+                    film_name = f"{i.film_name: ^37}" 
+                    director_name = f"{i.director_name: ^37}" 
+                    estreno =  f"{i.estreno: ^37}" 
+                    puntuation = f"{i.puntuation: ^37}"
+                    print(f"\t{film_name}\t{director_name}\t{estreno}\t{puntuation}")
+
+                separador = '-'*37
+                lineas = f'\t{separador}'*4
+                print(lineas)
     
     
 
@@ -477,9 +501,6 @@ def accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_n
             else:
                     conclusion = lista_peliculas_norep
                     conclusion_data = data_no_repeat
-
-
-
             
             #1
             print('\nPeliculas creadas por director: \n')
@@ -503,12 +524,7 @@ def accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_n
 
 
             
-
-
-
-
 #-----------------------------------------------------------------------------------------------------------------------------------
-
 
 
 
