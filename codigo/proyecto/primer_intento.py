@@ -10,6 +10,7 @@ import array_ordered_positional_list as aop
 import linked_ordered_positional_list as lop
 import pandas as pd
 import class_pelicula as peli
+<<<<<<< HEAD
 import curses
 
 
@@ -17,6 +18,8 @@ import curses
 
 
 
+=======
+>>>>>>> e63efdf92a085ed199d31d2d999eb80f94a9c020
 
 
 #---------------------------------------------------------------------------------------------------------------
@@ -95,8 +98,28 @@ def menus(menu,  eleccion = int, data_repeat = pd.DataFrame, lista = list):
         elif menu == 6:
                salida = '\n¿Quieres guardar la nueva lista?: \n    (1)SI\n    (2)NO\n\n\tEleccion: '
 
+<<<<<<< HEAD
         eleccion = int(input(salida))
                 
+=======
+
+        while True:
+
+            try:
+                eleccion = int(input(salida))
+                
+                if (eleccion<1 or eleccion>2):
+                    raise peli.NumberNotInMenu
+                break
+
+            except ValueError:
+                print('\nDebes introducir un número\n')
+
+            except peli.NumberNotInMenu:
+                print('\nDebe de ser un número del 1 al 2\n')
+
+
+>>>>>>> e63efdf92a085ed199d31d2d999eb80f94a9c020
         if eleccion == 1:
             opcion  = True
 
@@ -105,6 +128,7 @@ def menus(menu,  eleccion = int, data_repeat = pd.DataFrame, lista = list):
 
         return opcion
      
+<<<<<<< HEAD
 #---------------------------------------------------------------------------
 
     elif menu ==1:
@@ -145,6 +169,53 @@ def menus(menu,  eleccion = int, data_repeat = pd.DataFrame, lista = list):
          
 
          #-----------------------------------------------------------------------------
+=======
+    
+    elif menu ==1:
+        while True:
+
+            try:
+                quehacer = int(input('\n---x---\n\nQue quieres ver:\n(1)Lista de peliculas ordenadas\n(2)Lista de películas ordenadas sin duplicados (devuelve un archivo txt con las peliculas)\n(3)Ver algunos listados tabulados\n(4)Mostrar métricas\n(5)Cerrar programa\n\nEleccion: '))
+                if quehacer == 5:
+                    sys.exit()
+                
+                
+                if (quehacer<1 or quehacer>4):
+                    raise peli.NumberNotInMenu
+                break
+                
+
+            except ValueError:
+                print('\nDebes introducir un número\n')
+
+            except peli.NumberNotInMenu:
+                print('\nDebe de ser un número del 1 al 4\n')
+
+
+        return quehacer
+
+    elif menu == 2:
+
+        while True:
+
+            try:
+                eleccion = int(input('Que quieres hacer: \n    (1)Ver todas las peliculas\n    (2)Peliculas rodadas por un director\n    (3)Peliculas estrenadas en un año \n    (4)Cancelar\n\n\tEleccion: '))
+                
+                if (eleccion<1 or eleccion>4):
+                    raise peli.NumberNotInMenu
+                break
+
+            except ValueError:
+                print('\nDebes introducir un número\n')
+
+            except peli.NumberNotInMenu:
+                print('\nDebe de ser un número del 1 al 3\n')
+
+        return eleccion
+     
+    elif menu == 3:
+         
+>>>>>>> e63efdf92a085ed199d31d2d999eb80f94a9c020
          if eleccion == 2:
 
             director = input('\nDeme un nombre del director: ')
@@ -156,7 +227,11 @@ def menus(menu,  eleccion = int, data_repeat = pd.DataFrame, lista = list):
 
             return director
         
+<<<<<<< HEAD
             #-----------------------------------------------------------------------------
+=======
+
+>>>>>>> e63efdf92a085ed199d31d2d999eb80f94a9c020
 
 
          elif eleccion == 3:
@@ -179,7 +254,11 @@ def menus(menu,  eleccion = int, data_repeat = pd.DataFrame, lista = list):
 
             return año
          
+<<<<<<< HEAD
          #-----------------------------------------------------------------------------
+=======
+
+>>>>>>> e63efdf92a085ed199d31d2d999eb80f94a9c020
 
          elif eleccion == 4:
              
@@ -196,7 +275,11 @@ def menus(menu,  eleccion = int, data_repeat = pd.DataFrame, lista = list):
 
              return director
          
+<<<<<<< HEAD
          #-----------------------------------------------------------------------------
+=======
+
+>>>>>>> e63efdf92a085ed199d31d2d999eb80f94a9c020
          elif eleccion == 5:
             aux = []
             for y in lista:
@@ -223,6 +306,7 @@ def menus(menu,  eleccion = int, data_repeat = pd.DataFrame, lista = list):
 
 
 
+<<<<<<< HEAD
 
 
 
@@ -231,6 +315,8 @@ def menus(menu,  eleccion = int, data_repeat = pd.DataFrame, lista = list):
 
 
 
+=======
+>>>>>>> e63efdf92a085ed199d31d2d999eb80f94a9c020
 def accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_no_repeat):
     '''
     Funcion que ejecuta las acciones del programa. Recibe toda la informacion con la que
@@ -523,7 +609,11 @@ def accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_n
 
 
 
+<<<<<<< HEAD
 def main(pantalla):
+=======
+def main():
+>>>>>>> e63efdf92a085ed199d31d2d999eb80f94a9c020
     '''
     Funcion de ejecucion. Al llamarla se ejecuta todo el programa
 
@@ -623,6 +713,7 @@ def main(pantalla):
 
     quehacer = menus(1)
     
+<<<<<<< HEAD
 
 
     curses.curs_set(0)  # Ocultar el cursor
@@ -657,6 +748,8 @@ def main(pantalla):
 
 
 
+=======
+>>>>>>> e63efdf92a085ed199d31d2d999eb80f94a9c020
     while True:
 
         accion(lista_peliculas, lista_peliculas_norep, quehacer, data_repeat, data_no_repeat)
@@ -664,4 +757,8 @@ def main(pantalla):
         
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     curses.wrapper(main)
+=======
+    main()
+>>>>>>> e63efdf92a085ed199d31d2d999eb80f94a9c020

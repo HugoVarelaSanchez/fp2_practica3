@@ -36,7 +36,11 @@ def main(pantalla):
             # Abrir el segundo menú si se presiona Enter en una opción del primer menú
             elif key == 10:  # 10 es el código de Enter
                 pantalla.clear()  # Borra la pantalla antes de imprimir el segundo menú
+<<<<<<< HEAD
                 aux1 = opciones_menu_1[seleccion_menu_1]
+=======
+                aux1 = opciones_menu_1[seleccion_menu_2]
+>>>>>>> e63efdf92a085ed199d31d2d999eb80f94a9c020
                 break  # Salir del bucle para abrir el segundo menú
 
         # Definir las opciones del segundo menú
@@ -70,7 +74,11 @@ def main(pantalla):
                 
         # Imprimir el mensaje
         pantalla.clear()
+<<<<<<< HEAD
         pantalla.addstr(f'Menu 1 opcion {aux1} // Menu 2 opcion {aux2}')
+=======
+        pantalla.addstr(f'Menu 1 opcion {aux} // Menu 2 opcion {aux2}')
+>>>>>>> e63efdf92a085ed199d31d2d999eb80f94a9c020
         pantalla.refresh()
         time.sleep(2)
         pantalla.clear()
