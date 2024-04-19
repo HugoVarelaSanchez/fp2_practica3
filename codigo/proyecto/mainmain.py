@@ -5,42 +5,118 @@ import class_pelicula as peli
 import curses, time, sys
 
 
-def menu_director(pantalla, lista):
-	pantalla.clear()
+'''
+Cosas a destacar:
+	Vale a ver, soy Hugo, y basicamente se me metio en la cabeza crear un menu para la practica y hasta aqui llegue.
+	Decidi usar la libreria curses y crear una interfaz de terminal, bastante simple, pero utilizable.
+
+	Yo no habia escuchado ni visto nada de curses ni ninguna interfaz hasta hace dos dias, por lo que seguramente el 
+	codigo sea algo caotico (en el sentido de la implementacion de curses). 
+
+	El codigo no va documentado ya que funciona igual que el principal (Acabo de conseguir terminar el codigo y son las 16:54 y tengo que arreglar esto un poco no me da tiempo
+	y literalmente se basa en el anterior, principalmente lo que cambia es la recogida y salida de datos)
+
+	Dejo unos comentarios de cosas que hacen las funciones mas recursivas de curses a lo largo del codigo. (lo que entendi yo):
+
+	pantalla.addstr(n:y, m:x, str) -> lo que hace es escribir un mensaje (el str) en unas coordenadas de la pantalla (m:x, n:y)
+	imagina que es un print
 	
+
+	pantalla.clear() -> es como que limpia la pantalla, la devuelve vacia de cualquier addstr
+
+	pantalla.refresh() -> si 'limpias' la pantalla pero no la actualizas va a seguir mostrando lo mismo
+
+	pantalla.getch() -> Es como que recoge el valor introducido por teclado, el siguiente, cualquiera
+	de ahi se puede comparar, que se isa mucho, si es curses.KEY_UP si presionas flecha arriba o 
+	si es 10 so presionas enter
+	
+	curses.initstr() -> inicializa la interfaz
+
+	curses.curs_set(0)  -> oculta el cursor
+
+	pantalla.nodelay(True)  -> configura el getch para que no se bloquee
+
+	pantalla.keypad(True) -> activa el poder pasar valores por teclado
+
+	curses.A_REVERSE -> es lo que hace que se resalte el fondo de la opcion seleccionada
+
+	hay mas como curses.echo pero no los hemos usado
+
+	
+	pantalla.addstr('Pulse enter para continuar.')
+
+		while True:
+			pantalla.refresh()
+			key = pantalla.getch()
+			
+			if key == 10:
+				break
+
+	Una funcion que se me ocurrio, hasta que no pulses enter no contiunua por lo tanto lo llevas
+	controlado de cuando quieres seguir, no hay tiempos y solo te aparece por pantalla lo que quieras.
+	
+	
+	pd, se podria usar pantalla.getstr() para recojer el nombre del archivo o que director
+	quieres, pero, aparte de que quede mejor como lo implentamos, 
+	'''
+
+
+
+
+
+
+
+
+#Menu para la eleccion de director para el apartado 3.2
+
+
+
+
+
+def menu_director(pantalla, lista):
+	
+	pantalla.clear()
 	opciones = []
 	texto = 'Elija un director'
 
-	for posicion, pelicula in enumerate(lista):
-		# if pelicula.director_name in opciones:
-		# 	pass
-		# else:
-			opciones.append((pelicula.director_name))
-
+	#creamos una lista con las peliculas de lista
+	for pelicula in (lista):
+		opciones.append((pelicula.director_name))
+	
+	
 	
 
 	
-	
+	#En varios lugares de la practica se ve esto, esto se usa como 'cursor'
+	#Por lo que entendi, toda la pantalla son -1, excepto la opcion en la
+	#que estamos, que es 0, 0, y por eso conseguimos resalrtar y elegir.
+		
 	fila_actual = 0
 	columna_actual = 0
-	max_filas = (len(opciones)) // 5  # Calcular el número máximo de filas para el menú
+	
+	#
+	max_filas = (len(opciones)) // 5  
 
 	while True:
+
 		pantalla.addstr(0, 0, texto)
-		# Renderizar las opciones en un formato de 4x5
+
 		for i, año in enumerate(opciones):
 			fila = i // 5  # Calcular la fila en función del índice
 			columna = i % 5  # Calcular la columna en función del índice
 			
 			if fila == fila_actual and columna == columna_actual:
 				pantalla.addstr(fila + 2, columna * 20, str(año), curses.A_REVERSE)
+
 			else:
 				pantalla.addstr(fila + 2, columna * 20, str(año))
+
 
 		pantalla.refresh()
 		key = pantalla.getch()
 
 		# Manejar las teclas de flecha para cambiar la selección
+
 		if key == curses.KEY_UP:
 			fila_actual = (fila_actual - 1) % max_filas
 		elif key == curses.KEY_DOWN:
@@ -49,7 +125,8 @@ def menu_director(pantalla, lista):
 			columna_actual = (columna_actual - 1) % 5
 		elif key == curses.KEY_RIGHT:
 			columna_actual = (columna_actual + 1) % 5
-		elif key == 10:  # 10 es el código de Enter
+
+		elif key == 10:  
 			result = opciones[fila_actual * 5 + columna_actual]
 			pantalla.clear()
 			pantalla.refresh()
@@ -63,39 +140,51 @@ def menu_director(pantalla, lista):
 
 
 
-
+#Lo mismo que antes pero con años, hay que tener en cuenta que año es un int
 def menu_años(pantalla, lista):
-	pantalla.clear()
 	
+	pantalla.clear()
 	opciones = []
-	texto = 'SElija un año:'
+	texto = 'Elija un año:'
+	
 	for posicion, año in enumerate(lista):
 		opciones.append(int(año.estreno))
 	opciones.sort()
+
 	for i in opciones:
 		i = str(i)
-	opciones = set(opciones)
-	opciones= list(opciones)
+	opciones = list(set(opciones))
+	
+	#Esto es bastante raro de explicar, pero lo probe y funciona.
+	#Lo que hago es crear una estructura de datos que es un conjunto, que es set
+	#Como es un conjunto, no hay repetidos, por lo que los elimina, y despues
+	#lo que hago es colver a convertirlo en lista. 
+
 	
 	fila_actual = 0
 	columna_actual = 0
-	max_filas = (len(opciones)) // 5  # Calcular el número máximo de filas para el menú
+
+	max_filas = (len(opciones)) // 5  
+
 
 	while True:
+
 		pantalla.addstr(0, 0, texto)
+
+
 		for i, año in enumerate(opciones):
-			fila = i // 5  # Calcular la fila en función del índice
-			columna = i % 5  # Calcular la columna en función del índice
+			fila = i // 5  
+			columna = i % 5  
 			
 			if fila == fila_actual and columna == columna_actual:
 				pantalla.addstr(fila + 2, columna * 10, str(año), curses.A_REVERSE)
+
 			else:
 				pantalla.addstr(fila + 2, columna * 10, str(año))
 
 		pantalla.refresh()
 		key = pantalla.getch()
 
-		# Manejar las teclas de flecha para cambiar la selección
 		if key == curses.KEY_UP:
 			fila_actual = (fila_actual - 1) % max_filas
 		elif key == curses.KEY_DOWN:
@@ -104,50 +193,59 @@ def menu_años(pantalla, lista):
 			columna_actual = (columna_actual - 1) % 5
 		elif key == curses.KEY_RIGHT:
 			columna_actual = (columna_actual + 1) % 5
-		elif key == 10:  # 10 es el código de Enter
+
+		elif key == 10:  
 			result = opciones[fila_actual * 5 + columna_actual]
+
 			pantalla.clear()
 			pantalla.refresh()
 			return result
+		
+
+
+
+
+#Funcion tambien utilizada en la
+
 
 def menus(pantalla, menu, seleccion=int, lista_rep=list, lista_norep=list, data=pd.DataFrame, data_norep=pd.DataFrame):
+	
 	pantalla.clear()
 	seleccion_menu_0 = 0
+
 	if menu == 1:
 		texto = '¿Que quieres hacer?'
 		opciones = ['Lista peliculas ordenadas', 'Lista peliculas sin duplicados (puede generar archivo)', 'Visualizacion listados tabulados', 'Metricas', 'Exit']
-		bombo = [1, 2, 3, 4, 5]
-		clat = {'Lista peliculas ordenadas': 1,'Lista peliculas sin duplicados (puede generar archivo)': 2,'Visualizacion listados tabulados': 3,'Metricas': 4,'Exit': 5}
+		bomboclat = {'Lista peliculas ordenadas': 1,'Lista peliculas sin duplicados (puede generar archivo)': 2,'Visualizacion listados tabulados': 3,'Metricas': 4,'Exit': 5}
 	elif menu == 2:
 		texto = 'Que quieres hacer'
 		opciones = ['Ver todos los archivos', 'Filtrar por director', 'Filtrar por año', 'Cancelar']
-		bombo = [1, 2, 3, 4]
-		clat = {'Ver todos los archivos':1, 'Filtrar por director':2, 'Filtrar por año':3, 'Cancelar':4}
+		bomboclat = {'Ver todos los archivos':1, 'Filtrar por director':2, 'Filtrar por año':3, 'Cancelar':4}
 	elif menu == 3:
 		texto = '¿Quiere generar un archivo nuevo?'
 		opciones = ['Si', 'No']
-		bombo = [1, 2]
-		clat = {'Si':1, 'No':2}
+		bomboclat = {'Si':1, 'No':2}
 	elif menu == 4:
 		texto = '¿Quiere usar repetidos o no?'
 		opciones = ['Repetidos', 'Sin repetidos']
-		bombo = [1, 2]
-		clat = {'Repetidos':1, 'Sin repetidos':2}
+		bomboclat = {'Repetidos':1, 'Sin repetidos':2}
 	elif menu == 5:
 		texto = '¿Quiere representar un dataframe o lista tabulada?'
 		opciones = ['Usar DataFrame', 'Usar tabulacion']
-		bombo = [1, 2]
-		clat = {'Usar DataFrame':1, 'Usar tabulacion':2}
+		bomboclat = {'Usar DataFrame':1, 'Usar tabulacion':2}
 	
 	elif menu == 6:
 		sys.exit()
 
 	
 	while True:
+
 		pantalla.addstr(0, 0, texto)  
 		for i, opcion in enumerate(opciones):
+
 			if i == seleccion_menu_0:
 				pantalla.addstr(i+1, 0, opcion, curses.A_REVERSE)
+
 			else:
 				pantalla.addstr(i+1, 0, opcion)
 		
@@ -161,10 +259,9 @@ def menus(pantalla, menu, seleccion=int, lista_rep=list, lista_norep=list, data=
 		elif key == curses.KEY_DOWN:
 			seleccion_menu_0 = (seleccion_menu_0 + 1) % len(opciones)
 
-		# Volver al primer menú si se presiona Enter en una opción del segundo menú
-		elif key == 10:  # 10 es el código de Enter
+		elif key == 10:  
 			saras = opciones[seleccion_menu_0]
-			result = clat[saras]
+			result = bomboclat[saras]
 			
 
 			break
@@ -172,7 +269,7 @@ def menus(pantalla, menu, seleccion=int, lista_rep=list, lista_norep=list, data=
 	return result
 
 
-
+#Funcion mas extensa por la cantidad de addstr
 def accion(pantalla, accion, lista_rep=list, lista_norep=list, data=pd.DataFrame, data_norep=pd.DataFrame):
 
 	if accion == 5:
@@ -181,13 +278,16 @@ def accion(pantalla, accion, lista_rep=list, lista_norep=list, data=pd.DataFrame
 
 
 	elif accion == 1:
+
 		pantalla.clear()
 		pantalla.addstr(0, 0, 'Lista de todas las peliculas:')
+		
+		#Se usan bastantes list comprehension
 		for i, pelis in enumerate(lista_rep): 
 			pantalla.addstr(i+1, 0, f'Director: {pelis.director_name}, Pelicula: {pelis.film_name} Estreno: {pelis.estreno}, Puntuation: {pelis.puntuation}')
+
 			if i == len(lista_rep)-1:
 				pantalla.addstr(i+2, 0, 'Pulse enter para continuar.')
-
 
 		pantalla.addstr('Pulse enter para continuar.')
 
@@ -214,6 +314,7 @@ def accion(pantalla, accion, lista_rep=list, lista_norep=list, data=pd.DataFrame
 		
 		pantalla.addstr(i+2, 0, 'Pulse enter para continuar.')
 		pantalla.refresh()
+
 		while True:
 			pantalla.refresh()
 			key = pantalla.getch()
@@ -221,15 +322,16 @@ def accion(pantalla, accion, lista_rep=list, lista_norep=list, data=pd.DataFrame
 			if key == 10:
 				break
 
-		
 		pantalla.refresh()
-
 		guardar = menus(pantalla, 3)
 		
 
 		if guardar == 1:
+
 			nombre_archivo = 'Peliculas_sin_repetir.txt'
+
 			with open(f'{nombre_archivo}', 'w', encoding='utf-8') as archivo:
+
 				for pelii in lista_norep:
 					archivo.write(f'{pelii.director_name}; {pelii.film_name}; {pelii.estreno}; {pelii.puntuation}\n')
 
@@ -237,6 +339,7 @@ def accion(pantalla, accion, lista_rep=list, lista_norep=list, data=pd.DataFrame
 			pantalla.addstr(0, 0, 'Lista guardada')
 			pantalla.addstr(1, 0, 'Presione enter para continuar')
 			pantalla.refresh()
+
 			while True:
 				pantalla.refresh()
 				key = pantalla.getch()
@@ -245,18 +348,18 @@ def accion(pantalla, accion, lista_rep=list, lista_norep=list, data=pd.DataFrame
 					break
 
 
-              # Salir del bucle cuando se haya hecho una selección
 
 
 
 
 	if accion == 3:
+
 		siguiente = menus(pantalla, 2)
 		
 		if siguiente in (1, 2, 3):
+
 			rep = menus(pantalla, 4)
 			pri = menus(pantalla, 5)
-
 
 
 			if rep == 1:
@@ -276,6 +379,7 @@ def accion(pantalla, accion, lista_rep=list, lista_norep=list, data=pd.DataFrame
 
 					pantalla.addstr(0, 0, f'Todas las peliculas tabuladas y ordenadas en formato DataFrame {tx} repetidos')
 					pantalla.addstr(1, 0, conclusion_data.to_string())
+
 					long = (len(conclusion_data))
 					pantalla.addstr(long+6, 0, 'Pulse enter para continuar')
 
@@ -342,6 +446,7 @@ def accion(pantalla, accion, lista_rep=list, lista_norep=list, data=pd.DataFrame
 					
 				if pri == 1:
 					pantalla.clear()
+
 					#------------------------------
 					director = menu_director(pantalla, conclusion)
 					#------------------------------
@@ -427,6 +532,7 @@ def accion(pantalla, accion, lista_rep=list, lista_norep=list, data=pd.DataFrame
 
 
 					pantalla.clear()
+
 					#------------------------------
 					año = menu_años(pantalla, conclusion)
 					#------------------------------
@@ -450,6 +556,7 @@ def accion(pantalla, accion, lista_rep=list, lista_norep=list, data=pd.DataFrame
 					
 
 					año = menu_años(pantalla, conclusion)
+
 					pantalla.clear()
 					pantalla.addstr(0, 0, f'Todas las peliculas de {año} tabuladas y ordenadas en formato lista tabulada {tx} repetidos')
 
@@ -507,20 +614,23 @@ def accion(pantalla, accion, lista_rep=list, lista_norep=list, data=pd.DataFrame
 
 
 	if accion == 4:
+
 		rep = menus(pantalla, 4)
 
 		if rep == 1:
 					conclusion = lista_rep
 					conclusion_data = data
+					tx = 'con'
 		else:
 					conclusion = lista_norep
 					conclusion_data = data_norep
+					tx = 'sin'
 
 	#--------------------------------------------------------------
 
 		pantalla.clear()
 		
-		pantalla.addstr(0, 0, 'Peliculas creadas por director: ')
+		pantalla.addstr(0, 0, f'Peliculas creadas por director {tx} repetidos: ')
 		
 		group_col = 'Director'
 		num_peliculas_por_director = conclusion_data.groupby(group_col).size()
@@ -542,7 +652,7 @@ def accion(pantalla, accion, lista_rep=list, lista_norep=list, data=pd.DataFrame
 		
 #-----------------------------------------------------------------
 
-		pantalla.addstr(0, 0, 'Peliculas creadas por director: ')
+		pantalla.addstr(0, 0, f'Peliculas creadas por director {tx} repetidos: ')
 		
 		group_col = 'Director'
 		target_col = 'Puntuacion'
@@ -562,10 +672,11 @@ def accion(pantalla, accion, lista_rep=list, lista_norep=list, data=pd.DataFrame
 				if key == 10:
 					pantalla.clear()
 					break
-	#----------------------------------------------------------
 		pantalla.clear()
-		
-		pantalla.addstr(0, 0, 'Puntuacion media por director: ')
+
+			#----------------------------------------------------------
+
+		pantalla.addstr(0, 0, f'Puntuacion media por director {tx} repetidos: ')
 		
 		group_col = 'Año'
 		target_col = 'Puntuacion'
@@ -596,8 +707,11 @@ def accion(pantalla, accion, lista_rep=list, lista_norep=list, data=pd.DataFrame
 
 
 def main():
-	#archivo = sys.argv[1]
-	archivo = 'peliculas.txt'
+	#Creamos la variable archivo y la rellenamos con el txt que le pasamos
+	
+	archivo = sys.argv[1]
+
+	#Definimos pantalla inicializando la interfaz
 	pantalla = curses.initscr()
 
 	
@@ -609,7 +723,7 @@ def main():
 
 	def imprimir_menu(opciones_menu, seleccion_menu, texto):
 
-		pantalla.addstr(0, 0, texto)  # Agregar el texto del menú en la parte superior de la pantalla
+		pantalla.addstr(0, 0, texto)  
 
 		for i, opcion in enumerate(opciones_menu):
 
@@ -619,10 +733,10 @@ def main():
 				pantalla.addstr(i+1, 0, opcion)
 
 
-	curses.curs_set(0)  # Ocultar el cursor
-	pantalla.nodelay(True)  # Configurar para que getch() no bloquee
-	pantalla.keypad(True) #Activa el poder pasar valores por teclado
-
+	curses.curs_set(0)  
+	pantalla.nodelay(True)  
+	pantalla.keypad(True) 
+	curses.noecho()
 
 	opciones_menu_0 = ["(1)Array_ordered_positional_list", '(2)Linked_ordered_positional_list']
 	seleccion_menu_0 = 0
@@ -630,26 +744,23 @@ def main():
 
 	
 	while True:
-		#pantalla.clear()  # Limpiar la pantalla antes de imprimir
-		pantalla.addstr(0, 0, texto_menu_0)  # Agregar el texto del menú en la parte superior de la pantalla
+		pantalla.addstr(0, 0, texto_menu_0)  
 		imprimir_menu(opciones_menu_0, seleccion_menu_0, texto_menu_0)
 		pantalla.refresh()
 		key = pantalla.getch()
 
-		# Manejar las teclas de flecha para cambiar la selección del segundo menú
 		if key == curses.KEY_UP:
 			seleccion_menu_0 = (seleccion_menu_0 - 1) % len(opciones_menu_0)
 		elif key == curses.KEY_DOWN:
 			seleccion_menu_0 = (seleccion_menu_0 + 1) % len(opciones_menu_0)
-		# Volver al primer menú si se presiona Enter en una opción del segundo menú
-		elif key == 10:  # 10 es el código de Enter
+		
+		elif key == 10:  
 			tipo_lista = opciones_menu_0[seleccion_menu_0]
 			pantalla.clear()
 			
-			break  # Salir del bucle para volver al primer menú
+			break  
 				
-		# Imprimir el mensaje
-		#pantalla.clear()
+		
 
 
 
@@ -768,3 +879,7 @@ def main():
 
 if __name__ == "__main__":
 	main()
+
+
+
+
