@@ -438,16 +438,18 @@ def accion(accion, lista_rep=list, lista_norep=list, data=pd.DataFrame, data_nor
 
 
             elif siguiente == 3:
+
                 aux2 = []
 
                     #Guardamos todos los nombres de directores
                 for i in conclusion:
-                    aux2.append(i.estreno)
+                    aux2.append(int(i.estreno))
 
+                
                 while True:
                         #Si el año no esta en la nueva lista, vuelve a pedir y suelta un mensaje de error
                         try:
-                            año = input('\nDeme un año: ')
+                            año = int(input('\nDeme un año: '))
                             
                             if (año not in aux2):
                                 raise peli.NumberNotInMenu
