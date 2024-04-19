@@ -18,6 +18,9 @@ Cosas a destacar:
 
 	Dejo unos comentarios de cosas que hacen las funciones mas recursivas de curses a lo largo del codigo. (lo que entendi yo):
 
+	Por cierto, curses es una libreria estandar de python por lo tanto no tienes que instalarla, pero lo que si es que se necesita un subsistema 
+	linux para utilizarla (yo uso linux y me deja ejecutarlo pero intentandolo ejecutar en el menu de la terminal de windows no me dejo)
+
 	pantalla.addstr(n:y, m:x, str) -> lo que hace es escribir un mensaje (el str) en unas coordenadas de la pantalla (m:x, n:y)
 	imagina que es un print
 	
@@ -57,7 +60,7 @@ Cosas a destacar:
 	
 	
 	pd, se podria usar pantalla.getstr() para recojer el nombre del archivo o que director
-	quieres, pero, aparte de que quede mejor como lo implentamos, 
+	quieres, pero, aparte de que quede mejor como lo implentamos.
 	'''
 
 
