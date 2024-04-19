@@ -16,10 +16,10 @@ class Pelicula:
         Es el nombre del usuario que ejecuta el proceso.
 
     estreno : int
-        año de estreno
+        Año de estreno
 
     puntuacion : float
-        nota de la pelicula
+        Nota de la pelicula
 
 
     -------
@@ -33,16 +33,16 @@ class Pelicula:
         Muestra por pantalla el proceso.
 
     def __eq__(self, other):
-        metodo magico que compara si un objeto es igual que otro
+        Metodo magico que compara si un objeto es igual que otro
     
     def __ge__(self, other):
-        metodo magico que compara si un objeto es mayor o igual que otro
+        Metodo magico que compara si un objeto es mayor o igual que otro
 
      def __gt__(self, other):
-        metodo magico que compara si un objeto es mayor que otro
+        Metodo magico que compara si un objeto es mayor que otro
 
     def data_values(self):
-        metodo de ayuda que devuelve una lista con los datos de la peli
+        Metodo de ayuda que devuelve una lista con los datos de la peli
     """ 
 
     def __init__(self,director_name : str, film_name  : str, estreno : str, puntuation : float):
@@ -54,16 +54,16 @@ class Pelicula:
         Parameters
         ----------
         film_name: str
-            Es el nombre del proceso.
+            Es el nombre de la película.
 
         director_name: str
-            Es el nombre del usuario que ejecuta el proceso.
+            Es el nombre del director/autor que ejecuta el proceso.
 
         puntuation: int
-            Duracion estimada del procesa. (short / long)
+            Nota dada a la película.
 
-        d_real: int
-            Duracion real del proceso.
+        estreno: int
+            Año de estreno de la película.
 
         ------- 
         Returns
